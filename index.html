@@ -54,6 +54,71 @@
         margin-left: 0.5rem;
         padding-left: 0.5rem;
     }
+
+    /* Flip kártya stílusok */
+    .flip-card {
+        background-color: transparent;
+        perspective: 1000px;
+        height: 350px;
+        margin-bottom: 20px;
+    }
+
+    .flip-card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+    }
+
+    .flip-card:hover .flip-card-inner {
+        transform: rotateY(180deg);
+    }
+
+    .flip-card-front, .flip-card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .flip-card-front {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .flip-card-back {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        transform: rotateY(180deg);
+    }
+
+    .flip-card-back img {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+
+    .flip-card h3 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .flip-card p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        text-align: left;
+    }
 </style>
 
 </head>
@@ -200,7 +265,108 @@
 <script>
   function loadMain() {
     const mainContent = document.querySelector('main');
-    mainContent.innerHTML = '<h1>Welcome to the TSJ Trading Course</h1><p>This is the main page content.</p>';
+    mainContent.innerHTML = `
+      <h1 class="mb-4">Welcome to the TSJ Trading Course</h1>
+      <p class="mb-5">Ez a kurzus segít elérni a kereskedési céljaidat. Ismerd meg az üzleti és személyes célkitűzéseimet!</p>
+      
+      <div class="row">
+        <!-- 1. kártya -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="flip-card">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <h3>Üzleti célkitűzés</h3>
+                <p>Elsődleges célom, hogy hosszú távon a tőzsdei kereskedésből biztosítsam a megélhetésemet, és képes legyek eltartani magamat, valamint a páromat. Olyan stabil és fenntartható jövedelemforrást szeretnék kialakítani, amely függetlenséget és kiszámíthatóságot biztosít.</p>
+              </div>
+              <div class="flip-card-back">
+                <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400" alt="Business Goals">
+                <p>Stabil jövedelem, függetlenség és kiszámíthatóság</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. kártya -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="flip-card">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <h3>Szakmai fejlődési célok</h3>
+                <p>Célom, hogy a kereskedésben olyan szintre jussak el, ahol magabiztosan, következetesen és rendszeresen tudok profitábilisan kereskedni. Ennek alapja egy jól definiált kereskedési rendszer, megfelelő kockázatkezelés és folyamatos önfejlesztés.</p>
+              </div>
+              <div class="flip-card-back">
+                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400" alt="Professional Development">
+                <p>Magabiztos, következetes és profitábilis kereskedés</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. kártya -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="flip-card">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <h3>Tőkestratégia és finanszírozás</h3>
+                <p>A terv megvalósításához legalább három prop trading cégnél szeretnék finanszírozott számlát elérni, számlánként minimum 100 000 USD értékben (pl. FTMO: 200 000 USD, FundingPips: 100 000 USD). Alternatív lehetőségként a futures piac is szóba jöhet.</p>
+              </div>
+              <div class="flip-card-back">
+                <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=400" alt="Capital Strategy">
+                <p>Prop trading cégek és futures piac</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. kártya -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="flip-card">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <h3>Pénzügyi és életviteli célok</h3>
+                <p>A tőzsdei bevételekből szeretném finanszírozni: egy kisebb, igényes lakás fenntartását valamint az évben legalább három közös utazást.</p>
+              </div>
+              <div class="flip-card-back">
+                <img src="https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=400" alt="Lifestyle Goals">
+                <p>Lakás, autó és utazások a kereskedésből</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. kártya -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="flip-card">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <h3>Hosszú távú vízió</h3>
+                <p>Hosszú távon célom egy stabil, skálázható kereskedési tevékenység kiépítése, amely lehetővé teszi az anyagi biztonságot, az életminőség folyamatos javítását, valamint a pénzügyi függetlenség elérését.</p>
+              </div>
+              <div class="flip-card-back">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400" alt="Long Term Vision">
+                <p>Stabil, skálázható kereskedés és pénzügyi függetlenség</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. kártya -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="flip-card">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <h3>Gépjármű</h3>
+                <p>Rövid távon egy megbízható, használt személygépkocsi beszerzése a cél. Mint például egy 2011–2013-as évjáratú Audi A4.</p>
+              </div>
+              <div class="flip-card-back">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400" alt="Long Term Vision">
+                <p>Helytől való függetlenség és némi prezentációs érték</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
   }
 
   function loadBasics(section = '') {

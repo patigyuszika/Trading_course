@@ -52,11 +52,13 @@
         background-color: rgba(0, 0, 0, 0.6);
         z-index: 1030;
         opacity: 0;
+        pointer-events: none;
         transition: opacity 0.3s ease;
     }
 
     .sidebar-overlay.show {
         opacity: 1;
+        pointer-events: auto;
     }
 
     /* Sidebar styles */

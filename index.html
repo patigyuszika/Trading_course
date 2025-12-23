@@ -8,19 +8,76 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
 <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
     body {
         background-color: #a8abb9;
+        overflow-x: hidden;
+    }
+
+    /* Hamburger menu button for mobile */
+    .mobile-menu-toggle {
+        display: none;
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        z-index: 1050;
+        background-color: #1a1d29;
+        color: white;
+        border: none;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
+    }
+
+    .mobile-menu-toggle:hover {
+        background-color: #252938;
+    }
+
+    /* Sidebar overlay for mobile */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 1030;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .sidebar-overlay.show {
+        opacity: 1;
+    }
+
+    /* Sidebar styles */
+    aside {
+        transition: transform 0.3s ease;
+        background-color: #1a1d29 !important;
     }
 
     /* Főgombok stílusa (Main, Basics, Psychology, stb.) */
     .main-menu-btn {
         font-weight: 600;
         font-size: 1.05rem;
-        padding: 0.6rem 1rem;
+        padding: 0.75rem 1rem;
         border-radius: 8px;
         transition: all 0.3s ease;
         border: none;
         background-color: transparent;
+        cursor: pointer;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
     }
 
     .main-menu-btn:hover {
@@ -36,10 +93,14 @@
     .submenu-item {
         font-size: 0.9rem;
         font-weight: 400;
-        padding: 0.4rem 0.8rem;
+        padding: 0.6rem 0.8rem;
         border-radius: 5px;
         transition: all 0.2s ease;
         opacity: 0.85;
+        cursor: pointer;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
     }
 
     .submenu-item:hover {
@@ -62,6 +123,7 @@
         perspective: 1000px;
         height: 350px;
         margin-bottom: 20px;
+        cursor: pointer;
     }
 
     .flip-card-inner {
@@ -73,6 +135,7 @@
         transform-style: preserve-3d;
     }
 
+    .flip-card.flipped .flip-card-inner,
     .flip-card:hover .flip-card-inner {
         transform: rotateY(180deg);
     }
@@ -107,6 +170,7 @@
         max-height: 200px;
         border-radius: 8px;
         margin-bottom: 10px;
+        object-fit: cover;
     }
 
     .flip-card h3 {
@@ -120,15 +184,126 @@
         line-height: 1.5;
         text-align: left;
     }
+
+    /* Mobile responsive styles */
+    @media (max-width: 767.98px) {
+        .mobile-menu-toggle {
+            display: block;
+        }
+
+        aside {
+            position: fixed !important;
+            top: 0;
+            right: 0;
+            height: 100vh;
+            width: 85vw;
+            max-width: 320px;
+            z-index: 1040;
+            transform: translateX(100%);
+            overflow-y: auto;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.3);
+        }
+
+        aside.show {
+            transform: translateX(0);
+        }
+
+        .sidebar-overlay {
+            display: block;
+        }
+
+        main {
+            width: 100% !important;
+            margin-left: 0 !important;
+            padding: 70px 15px 20px !important;
+        }
+
+        .flip-card {
+            height: 300px;
+        }
+
+        .flip-card h3 {
+            font-size: 1.2rem;
+        }
+
+        .flip-card p {
+            font-size: 0.85rem;
+        }
+
+        .flip-card-back img {
+            max-height: 140px;
+        }
+    }
+
+    /* Tablet styles */
+    @media (min-width: 768px) and (max-width: 991.98px) {
+        aside {
+            width: 35%;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        main {
+            width: 65%;
+            margin-left: 35%;
+        }
+    }
+
+    /* Desktop styles */
+    @media (min-width: 992px) {
+        aside {
+            width: 25%;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        main {
+            width: 75%;
+            margin-left: 25%;
+        }
+    }
+
+    /* Smooth scrolling */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    /* Custom scrollbar for sidebar */
+    aside::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    aside::-webkit-scrollbar-track {
+        background: rgba(255,255,255,0.05);
+    }
+
+    aside::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,0.2);
+        border-radius: 3px;
+    }
+
+    aside::-webkit-scrollbar-thumb:hover {
+        background: rgba(255,255,255,0.3);
+    }
 </style>
 
 </head>
 <body>
+<!-- Hamburger menu button for mobile -->
+<button class="mobile-menu-toggle" onclick="toggleSidebar()" aria-label="Toggle Menu">
+    <i class="bi bi-list"></i>
+</button>
+
+<!-- Overlay for mobile sidebar -->
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
 <div class="container-fluid min-vh-100">
     <div class="row min-vh-100">
 
         <!-- BAL SIDEBAR -->
-        <aside class="col-12 col-md-4 col-lg-3 bg-dark text-white p-4 d-flex flex-column">
+        <aside class="col-12 col-md-4 col-lg-3 bg-dark text-white p-4 d-flex flex-column" id="sidebar">
             <div class="mb-4">
                 <strong style="cursor: pointer;" onclick="loadHome()">TSJ - Trading Course</strong>
             </div>
@@ -264,12 +439,43 @@
 
 <!-- Alkalmazás logika -->
 <script>
+  // Toggle sidebar on mobile
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.querySelector('.sidebar-overlay');
+    sidebar.classList.toggle('show');
+    overlay.classList.toggle('show');
+  }
+
+  // Close sidebar when clicking on menu items (mobile only)
+  function closeSidebarOnMobile() {
+    if (window.innerWidth < 768) {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.querySelector('.sidebar-overlay');
+      sidebar.classList.remove('show');
+      overlay.classList.remove('show');
+    }
+  }
+
+  // Setup mobile flip cards
+  function setupMobileFlipCards() {
+    const flipCards = document.querySelectorAll('.flip-card');
+    flipCards.forEach(card => {
+      card.addEventListener('click', function() {
+        if (window.innerWidth < 768) {
+          this.classList.toggle('flipped');
+        }
+      });
+    });
+  }
+
   // Kezdőoldal betöltése indításkor
   window.addEventListener('DOMContentLoaded', function() {
     loadHome();
   });
 
   function loadHome() {
+    closeSidebarOnMobile();
     const mainContent = document.querySelector('main');
     mainContent.innerHTML = `
       <div class="container py-5">
@@ -315,6 +521,7 @@
   }
 
   function loadMain() {
+    closeSidebarOnMobile();
     const mainContent = document.querySelector('main');
     mainContent.innerHTML = `
       <h1 class="mb-4">Vision Board 2026</h1>
@@ -418,9 +625,11 @@
         </div>
       </div>
     `;
+    setTimeout(setupMobileFlipCards, 100);
   }
 
   function loadBasics(section = '') {
+    closeSidebarOnMobile();
     const mainContent = document.querySelector('main');
     const title = 'Basics';
     const contentMap = {
@@ -432,6 +641,7 @@
   }
 
   function loadPsychology(section = '') {
+    closeSidebarOnMobile();
     const mainContent = document.querySelector('main');
     const title = 'Psychology';
     const contentMap = {
@@ -443,6 +653,7 @@
   }
 
   function loadStrategy(section = '') {
+    closeSidebarOnMobile();
     const mainContent = document.querySelector('main');
     const title = 'Strategy';
     const contentMap = {
@@ -454,6 +665,7 @@
   }
 
   function loadPropfirms(section = '') {
+    closeSidebarOnMobile();
     const mainContent = document.querySelector('main');
     const title = 'Propfirms';
     const contentMap = {

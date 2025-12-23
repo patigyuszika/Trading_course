@@ -465,7 +465,10 @@
     flipCards.forEach(card => {
       card.addEventListener('click', function() {
         if (window.innerWidth < 768) {
-          this.classList.toggle('flipped');
+          // Remove flipped class from all cards
+          flipCards.forEach(c => c.classList.remove('flipped'));
+          // Add flipped class to clicked card
+          this.classList.add('flipped');
         }
       });
     });

@@ -448,7 +448,7 @@
                     <a class="nav-link text-white submenu-item" onclick="loadPsychology('risk')">Risk Management</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white submenu-item" onclick="loadPsychology('discipline')">Discipline</a>
+                    <a class="nav-link text-white submenu-item" onclick="loadPsychology('market-psychology')">Basic Understanding</a>
                 </li>
                 </ul>
             </div>
@@ -471,7 +471,7 @@
             <div class="collapse" id="strategyMenu">
                 <ul class="nav flex-column my-2 submenu-container">
                 <li class="nav-item">
-                    <a class="nav-link text-white submenu-item" onclick="loadStrategy('price-action')">Price Action</a>
+                    <a class="nav-link text-white submenu-item" onclick="loadStrategy('price-action')">Intraday Liquidity Volatility Model</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white submenu-item" onclick="loadStrategy('breakout')">Breakout</a>
@@ -579,7 +579,7 @@
           <div class="col-lg-8">
             <div class="ratio ratio-16x9 mb-4">
               <iframe 
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                src="https://www.youtube.com/watch?v=DLzxrzFCyOs&list=RDDLzxrzFCyOs&start_radio=1" 
                 title="Bevezető Videó" 
                 allowfullscreen
                 style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
@@ -725,36 +725,638 @@
     closeSidebarOnMobile();
     const mainContent = document.querySelector('main');
     const title = 'Basics';
-    const contentMap = {
-      'candlesticks': '<h2>Candlesticks</h2><p>Bevezetés a gyertyákhoz…</p>',
-      'support-resistance': '<h2>Support & Resistance</h2><p>Támasz/ellenállás alapok…</p>',
-      'indicators': '<h2>Indicators</h2><p>Indikátorok áttekintése…</p>'
-    };
-    mainContent.innerHTML = contentMap[section] || `<h2>${title}</h2><p>Válassz egy témát a lenyílóból.</p>`;
+    
+    if (section === 'candlesticks') {
+      loadCandlesticks();
+    } else {
+      const contentMap = {
+        'support-resistance': '<h2>Support & Resistance</h2><p>Támasz/ellenállás alapok…</p>',
+        'indicators': '<h2>Indicators</h2><p>Indikátorok áttekintése…</p>'
+      };
+      mainContent.innerHTML = contentMap[section] || `<h2>${title}</h2><p>Válassz egy témát a lenyílóból.</p>`;
+    }
+  }
+
+  // Load candlesticks from JSON
+  async function loadCandlesticks() {
+    const mainContent = document.querySelector('main');
+    
+    try {
+      const response = await fetch('candlesticks.en.json');
+      const data = await response.json();
+      
+      let html = `
+        <h1 class="mb-4">Candlestick Patterns</h1>
+        
+        <div class="card mb-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80; color: white;">
+          <div class="card-body">
+            <h5 class="card-title">Color Guide</h5>
+            <div class="row mt-3">
+      `;
+      
+      // Add color guide
+      Object.entries(data.general.colors).forEach(([color, meaning]) => {
+        html += `
+              <div class="col-md-4 mb-2">
+                <strong>${color.charAt(0).toUpperCase() + color.slice(1)}:</strong> ${meaning}
+              </div>
+        `;
+      });
+      
+      html += `
+            </div>
+            <p class="mt-3 mb-0"><em>${data.general.scope}</em></p>
+          </div>
+        </div>
+        
+        <div class="row">
+      `;
+      
+      // Add each pattern
+      const candleImages = {
+        'Doji': 'https://cdn.discordapp.com/attachments/1375862464754749651/1375866522903248956/1.png?ex=694cb74d&is=694b65cd&hm=57a5ff50d60da0bb9a77732c492e5a1ebbf44d2ddbfbdec30decd050c14d1462&',
+        'Hammer': 'https://cdn.discordapp.com/attachments/1375862464754749651/1375866614783676416/2.png?ex=694cb763&is=694b65e3&hm=3feeceace56762046691e3147793d9a87dcbf26369f970760d3426d8b0fc1742&-1518622506881-b82c88f5e000?w=400&h=300&fit=crop',
+        'Shooting Star': 'https://cdn.discordapp.com/attachments/1375862464754749651/1375866703715635241/3.png?ex=694cb778&is=694b65f8&hm=cd0f0848678ef7f312c264e3e822f54e5800aedb490479fed6c6b3744c816d58&',
+        'Bullish Engulfing': 'https://cdn.discordapp.com/attachments/1375862464754749651/1375866735152070766/4.png?ex=694cb780&is=694b6600&hm=66cb4ef5f9a56822ba53738e093a4697b87161f60617ad1eae449806be5b4bf4&',
+        'Bearish Engulfing': 'https://cdn.discordapp.com/attachments/1375862464754749651/1375866816038965400/5.png?ex=694cb793&is=694b6613&hm=54d094cb5ca59fc2d67eea4a6b294f84212ef386b866b5917efb137df243fdd6&',
+        'Piercing Pattern': 'https://cdn.discordapp.com/attachments/1375862464754749651/1375866965180026880/6.png?ex=694cb7b6&is=694b6636&hm=74dd38e97e23699d9ac694ec031ae2b6222ac2648c4a102b2f6e0704d2c94c02&',
+        'Dark Cloud Cover': 'https://cdn.discordapp.com/attachments/1375862464754749651/1375867061779173426/7.png?ex=694cb7cd&is=694b664d&hm=b11401b8f840d4b45fbcae8cd888d8aa76d451255cc45d6ff35660489ebe11c5&',
+        'Morning Star': 'https://cdn.discordapp.com/attachments/1375862464754749651/1375867183900393632/8.png?ex=694cb7eb&is=694b666b&hm=a86b0c6eca46e3025eb5f8083ff761f43cccb2c5252c82e24a3913d01137c4bf&',
+        'Evening Star': 'https://cdn.discordapp.com/attachments/1375862464754749651/1375867305417769020/9.png?ex=694cb807&is=694b6687&hm=046902b18695320d8112938e1f2f5144c57387baed09fbd92a9c2e9bd6aefce6&',
+        'Rising Three Methods': 'https://cdn.discordapp.com/attachments/1375862464754749651/1375867367719964692/10.png?ex=694cb816&is=694b6696&hm=c3e5a2f4412f61fadf0e766f8dffc1311a448a65e905d70a89d6187547f5d148&',
+        'Falling Three Methods': 'https://cdn.discordapp.com/attachments/1375862464754749651/1375867511215751320/11.png?ex=694cb839&is=694b66b9&hm=877c37931c780d59e99ff5cc6780739a754dbdde6c33ed27825e9ecd56ebbdcf&'
+      };
+      
+      Object.entries(data.patterns).forEach(([patternName, patternData]) => {
+        const imageUrl = candleImages[patternName] || 'https://images.unsplash.com/photo-1516321318423-f06f70504504?w=400&h=300&fit=crop';
+        html += `
+          <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card h-100" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+              <div class="card-body">
+                <h5 class="card-title" style="color: #fff; font-weight: 600;">${patternName}</h5>
+                <p class="card-text" style="font-size: 0.9rem; color: #d4e3f7; margin-bottom: 1rem;">${patternData.description}</p>
+        `;
+        
+        // Add types if they exist
+        if (patternData.types && Object.keys(patternData.types).length > 0) {
+          html += `<div style="border-top: 1px solid #3d5a80; padding-top: 0.75rem;">`;
+          Object.entries(patternData.types).forEach(([typeName, typeDesc]) => {
+            html += `
+              <div class="mb-2">
+                <small><strong style="color: #6ba3d4;">${typeName}:</strong></small>
+                <small style="color: #d4e3f7;">${typeDesc}</small>
+              </div>
+            `;
+          });
+          html += `</div>`;
+        }
+        
+        html += `
+<div class="mt-3" style="text-align: center; padding: 1rem;">
+                  <img src="${imageUrl}" alt="${patternName}" style="max-width: 100%; height: auto; border-radius: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += `
+        </div>
+      `;
+      
+      mainContent.innerHTML = html;
+    } catch (error) {
+      mainContent.innerHTML = '<p class="text-danger">Error loading candlesticks. Please check if candlesticks.en.json exists.</p>';
+      console.error('Error loading candlesticks:', error);
+    }
   }
 
   function loadPsychology(section = '') {
     closeSidebarOnMobile();
     const mainContent = document.querySelector('main');
     const title = 'Psychology';
-    const contentMap = {
-      'mindset': '<h2>Mindset</h2><p>Gondolkodásmód és elvárások kezelése…</p>',
-      'risk': '<h2>Risk Management</h2><p>Kockázatkezelési alapelvek…</p>',
-      'discipline': '<h2>Discipline</h2><p>Fegyelem és szabályok betartása…</p>'
-    };
-    mainContent.innerHTML = contentMap[section] || `<h2>${title}</h2><p>Válassz egy témát a lenyílóból.</p>`;
+    
+    if (section === 'risk') {
+      loadRiskManagement();
+    } else if (section === 'mindset') {
+      loadMindset();
+    } else if (section === 'market-psychology') {
+      loadMarketPsychology();
+    } else {
+      mainContent.innerHTML = `<h2>${title}</h2><p>Válassz egy témát a lenyílóból.</p>`;
+    }
+  }
+
+  // Load market psychology from JSON
+  async function loadMarketPsychology() {
+    const mainContent = document.querySelector('main');
+    
+    try {
+      const response = await fetch('marketpsychology.en.json');
+      const data = await response.json();
+      
+      let html = `
+        <h1 class="mb-4">Market Psychology - Basic Understanding</h1>
+        
+        <div class="card mb-4" style="background: linear-gradient(135deg, #5a3d2d 0%, #3d2a1e 100%); border: 2px solid #9f7a4a; color: white;">
+          <div class="card-body">
+            <h5 class="card-title" style="color: #ffc9a8; font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem;">${data.market_metaphor.title}</h5>
+            <p style="font-size: 1rem; color: #d4e3f7; line-height: 1.8; font-style: italic; margin: 0;">${data.market_metaphor.content}</p>
+          </div>
+        </div>
+        
+        <div class="card mb-4" style="background: linear-gradient(135deg, #5a2d2d 0%, #3d1a1a 100%); border: 2px solid #9f4a4a; color: white;">
+          <div class="card-body">
+            <h5 class="card-title" style="color: #ff9999; font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem;">${data.statistical_reality.title}</h5>
+            <p style="font-size: 0.95rem; color: #d4e3f7; line-height: 1.8; margin: 0;">${data.statistical_reality.content}</p>
+          </div>
+        </div>
+        
+        <div class="card mb-4" style="background: linear-gradient(135deg, #3d2d5a 0%, #2a1a3d 100%); border: 2px solid #7a4a9f;">
+          <div class="card-body">
+            <h5 style="color: #d4a8ff; font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem;">${data.psychological_foundation.title}</h5>
+            <p style="color: #d4e3f7; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">${data.psychological_foundation.content}</p>
+            
+            <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 5px; border-left: 4px solid #d4a8ff; margin-bottom: 1rem;">
+              <p style="color: #d4e3f7; font-size: 0.9rem; line-height: 1.6; margin: 0;"><strong style="color: #d4a8ff;">Market Reality:</strong> ${data.psychological_foundation.market_reality}</p>
+            </div>
+            
+            <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 5px; border-left: 4px solid #ff9999;">
+              <p style="color: #d4e3f7; font-size: 0.9rem; line-height: 1.6; margin: 0;"><strong style="color: #ff9999;">Zero-Sum Game:</strong> ${data.psychological_foundation.zero_sum_nature}</p>
+            </div>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Common Psychological Mistakes</h3>
+        
+        <div class="row">
+      `;
+      
+      // Add each psychological mistake
+      data.common_psychological_mistakes.forEach((item, index) => {
+        html += `
+          <div class="col-12 mb-4">
+            <div class="card" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80;">
+              <div class="card-body">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
+                  <div style="width: 45px; height: 45px; background: #9f4a4a; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.3rem;">
+                    ${index + 1}
+                  </div>
+                  <h5 style="color: #ff9999; margin: 0; font-weight: 700;">${item.mistake}</h5>
+                </div>
+                
+                <p style="color: #d4e3f7; font-size: 0.95rem; line-height: 1.6; margin-bottom: 0.75rem;"><strong style="color: #a8c5ff;">Description:</strong> ${item.description}</p>
+                <p style="color: #d4e3f7; font-size: 0.95rem; line-height: 1.6; margin-bottom: 0;"><strong style="color: #ffc9a8;">Impact:</strong> ${item.details}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += `
+        </div>
+        
+        <div class="card mb-4" style="background: linear-gradient(135deg, #2d5a3d 0%, #1a3d2a 100%); border: 2px solid #4a9f6e;">
+          <div class="card-body">
+            <h4 style="color: #a8d5a8; font-weight: 700; margin-bottom: 1rem;">${data.analysis_and_solution.title}</h4>
+            <p style="color: #d4e3f7; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">${data.analysis_and_solution.cause}</p>
+            
+            <h6 style="color: #a8d5a8; font-weight: 600; margin-bottom: 0.75rem;">Solution Overview:</h6>
+            <p style="color: #d4e3f7; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">${data.analysis_and_solution.solution.overview}</p>
+            
+            <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 5px;">
+              <h6 style="color: #a8d5a8; font-weight: 600; margin-bottom: 0.75rem;">Methods to Apply:</h6>
+              <ul style="margin: 0; padding-left: 1.5rem;">
+      `;
+      
+      data.analysis_and_solution.solution.methods.forEach(method => {
+        html += `<li style="color: #d4e3f7; font-size: 0.9rem; margin-bottom: 0.5rem;">${method}</li>`;
+      });
+      
+      html += `
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card" style="background: linear-gradient(135deg, #5a3d2d 0%, #3d2a1e 100%); border: 2px solid #9f7a4a;">
+          <div class="card-body">
+            <h4 style="color: #ffc9a8; font-weight: 700; margin-bottom: 1rem;">⭐ ${data.core_principle.title}</h4>
+            <p style="color: #d4e3f7; font-size: 1rem; line-height: 1.8; margin: 0; border-left: 4px solid #ffc9a8; padding-left: 1rem;"><strong style="color: #ffc9a8;">${data.core_principle.content}</strong></p>
+          </div>
+        </div>
+      `;
+      
+      mainContent.innerHTML = html;
+    } catch (error) {
+      mainContent.innerHTML = '<p class="text-danger">Error loading market psychology. Please check if marketpsychology.en.json exists.</p>';
+      console.error('Error loading market psychology:', error);
+    }
+  }
+
+  // Load mindset from JSON
+  async function loadMindset() {
+    const mainContent = document.querySelector('main');
+    
+    try {
+      const response = await fetch('mindset.en.json');
+      const data = await response.json();
+      
+      let html = `
+        <h1 class="mb-4">${data.mindset_overview.title}</h1>
+        
+        <div class="card mb-4" style="background: linear-gradient(135deg, #3d2d5a 0%, #2a1a3d 100%); border: 2px solid #7a4a9f; color: white;">
+          <div class="card-body">
+            <h5 class="card-title" style="color: #d4a8ff; font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">Introduction</h5>
+            <h6 style="color: #b8a8d4;">${data.introduction.title}</h6>
+            <p style="font-size: 0.9rem; color: #d4e3f7; line-height: 1.6; margin-top: 0.5rem;">${data.introduction.content}</p>
+          </div>
+        </div>
+        
+        <div class="card mb-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80;">
+          <div class="card-body">
+            <h5 style="color: #a8c5ff; font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">${data.mindset_overview.content}</h5>
+            <div style="text-align: center; margin-top: 1rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 5px;">
+              <h6 style="color: #6ba3d4; font-size: 1.3rem; font-weight: 700; margin: 0;">${data.mindset_overview.breakdown}</h6>
+            </div>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">The Three Key Pillars</h3>
+        
+        <div class="row">
+      `;
+      
+      // Add each pillar
+      data.key_pillars.forEach((pillar, index) => {
+        const colors = [
+          { bg: '#3d2d5a', border: '#7a4a9f', accent: '#d4a8ff' },
+          { bg: '#2d5a3d', border: '#4a9f6e', accent: '#a8d5a8' },
+          { bg: '#5a3d2d', border: '#9f7a4a', accent: '#ffc9a8' }
+        ];
+        const color = colors[index % colors.length];
+        
+        html += `
+          <div class="col-12 mb-4">
+            <div class="card" style="background: linear-gradient(135deg, ${color.bg} 0%, rgba(0,0,0,0.2)); border: 2px solid ${color.border};">
+              <div class="card-body">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
+                  <div style="width: 50px; height: 50px; background: ${color.border}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.5rem;">
+                    ${index + 1}
+                  </div>
+                  <h4 style="color: ${color.accent}; margin: 0; font-weight: 700;">${pillar.pillar}</h4>
+                </div>
+                
+                <p style="color: #d4e3f7; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">${pillar.description}</p>
+        `;
+        
+        // Add subpoints/guidelines/principles
+        if (pillar.subpoints) {
+          html += `<div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 5px; margin-bottom: 1rem;">`;
+          Object.entries(pillar.subpoints).forEach(([key, value]) => {
+            const keyLabel = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            html += `
+              <div class="mb-2">
+                <strong style="color: ${color.accent};">${keyLabel}:</strong>
+                <p style="color: #d4e3f7; font-size: 0.9rem; margin-top: 0.3rem; margin-bottom: 0.5rem;">${value}</p>
+              </div>
+            `;
+          });
+          html += `</div>`;
+        }
+        
+        if (pillar.guidelines) {
+          html += `<div style="margin-bottom: 1rem;">`;
+          pillar.guidelines.forEach((guideline, gIndex) => {
+            html += `
+              <div style="display: flex; gap: 10px; margin-bottom: 0.5rem;">
+                <span style="color: ${color.accent}; font-weight: bold;">✓</span>
+                <p style="color: #d4e3f7; font-size: 0.9rem; margin: 0;">${guideline}</p>
+              </div>
+            `;
+          });
+          html += `</div>`;
+        }
+        
+        if (pillar.principles) {
+          html += `<div style="margin-bottom: 1rem;">`;
+          pillar.principles.forEach((principle, pIndex) => {
+            html += `
+              <div style="display: flex; gap: 10px; margin-bottom: 0.5rem;">
+                <span style="color: ${color.accent}; font-weight: bold;">•</span>
+                <p style="color: #d4e3f7; font-size: 0.9rem; margin: 0;">${principle}</p>
+              </div>
+            `;
+          });
+          html += `</div>`;
+        }
+        
+        if (pillar.mantra) {
+          html += `
+            <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.1); border-left: 4px solid ${color.border}; border-radius: 5px;">
+              <p style="color: ${color.accent}; font-size: 1.1rem; font-weight: 700; margin: 0; font-style: italic;">"${pillar.mantra}"</p>
+            </div>
+          `;
+        }
+        
+        if (pillar.challenge) {
+          html += `
+            <div style="margin-top: 1rem; padding: 1rem; background: rgba(255,255,255,0.05); border: 1px solid ${color.border}; border-radius: 5px;">
+              <p style="color: #d4e3f7; font-size: 0.9rem; line-height: 1.6; margin: 0;"><strong style="color: ${color.accent};">Challenge:</strong> ${pillar.challenge}</p>
+            </div>
+          `;
+        }
+        
+        html += `
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += `
+        </div>
+        
+        <div class="card mt-4" style="background: linear-gradient(135deg, #3d2d5a 0%, #2a1a3d 100%); border: 2px solid #7a4a9f;">
+          <div class="card-body">
+            <h4 style="color: #d4a8ff; font-weight: 700; margin-bottom: 1rem;">${data.conclusion.title}</h4>
+            <p style="color: #d4e3f7; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">${data.conclusion.content}</p>
+            <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 5px; border-left: 4px solid #d4a8ff;">
+              <p style="color: #d4a8ff; font-size: 1rem; font-weight: 600; line-height: 1.6; margin: 0;">${data.conclusion.final_message}</p>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      mainContent.innerHTML = html;
+    } catch (error) {
+      mainContent.innerHTML = '<p class="text-danger">Error loading mindset. Please check if mindset.en.json exists.</p>';
+      console.error('Error loading mindset:', error);
+    }
+  }
+
+  // Load risk management from JSON
+  async function loadRiskManagement() {
+    const mainContent = document.querySelector('main');
+    
+    try {
+      const response = await fetch('riskmanagement.en.json');
+      const data = await response.json();
+      
+      let html = `
+        <h1 class="mb-4">Risk Management</h1>
+        
+        <div class="card mb-4" style="background: linear-gradient(135deg, #2d5a3d 0%, #1a3d2a 100%); border: 2px solid #4a7c5a; color: white;">
+          <div class="card-body">
+            <h5 class="card-title" style="color: #a8d5a8; font-size: 1.3rem; font-weight: 700;">
+              <i class="bi bi-lightning-fill"></i> ${data.risk_management_summary}
+            </h5>
+          </div>
+        </div>
+        
+        <div class="row">
+      `;
+      
+      // Add each tip
+      data.trading_risk_management_tips.forEach((tip, index) => {
+        html += `
+          <div class="col-12 col-md-6 col-lg-6 mb-4">
+            <div class="card h-100" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+              <div class="card-body">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                  <div style="width: 40px; height: 40px; background: #4a7c5a; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.2rem;">
+                    ${index + 1}
+                  </div>
+                  <h5 class="card-title mb-0" style="color: #fff; font-weight: 600;">${tip.title}</h5>
+                </div>
+                <p class="card-text" style="font-size: 0.9rem; color: #d4e3f7; line-height: 1.6;">${tip.description}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += `
+        </div>
+        
+        <div class="card mt-4" style="background: linear-gradient(135deg, #2d5a3d 0%, #1a3d2a 100%); border: 1px solid #4a7c5a; color: white;">
+          <div class="card-body">
+            <h5 class="card-title" style="color: #a8d5a8; font-weight: 600; margin-bottom: 1rem;">Key Takeaway</h5>
+            <p style="font-size: 0.95rem; line-height: 1.6; color: #d4e3f7;">${data.conclusion}</p>
+          </div>
+        </div>
+      `;
+      
+      mainContent.innerHTML = html;
+    } catch (error) {
+      mainContent.innerHTML = '<p class="text-danger">Error loading risk management. Please check if riskmanagement.en.json exists.</p>';
+      console.error('Error loading risk management:', error);
+    }
   }
 
   function loadStrategy(section = '') {
     closeSidebarOnMobile();
     const mainContent = document.querySelector('main');
     const title = 'Strategy';
-    const contentMap = {
-      'price-action': '<h2>Price Action</h2><p>Ármozgás olvasása indikátorok nélkül…</p>',
-      'breakout': '<h2>Breakout</h2><p>Kitörések azonosítása és kezelése…</p>',
-      'pullback': '<h2>Pullback</h2><p>Visszahúzódások beszállói…</p>'
-    };
-    mainContent.innerHTML = contentMap[section] || `<h2>${title}</h2><p>Válassz egy témát a lenyílóból.</p>`;
+    
+    if (section === 'price-action') {
+      loadIntradayLiquidityVolatilityModel();
+    } else {
+      const contentMap = {
+        'breakout': '<h2>Breakout</h2><p>Kitörések azonosítása és kezelése…</p>',
+        'pullback': '<h2>Pullback</h2><p>Visszahúzódások beszállói…</p>'
+      };
+      mainContent.innerHTML = contentMap[section] || `<h2>${title}</h2><p>Válassz egy témát a lenyílóból.</p>`;
+    }
+  }
+
+  // Load Intraday Liquidity Volatility Model from JSON
+  async function loadIntradayLiquidityVolatilityModel() {
+    const mainContent = document.querySelector('main');
+    
+    try {
+      const response = await fetch('IntradayLiquidityVolatilityModel.en.json');
+      const data = await response.json();
+      const overview = data.strategy_overview;
+      const playbook = data.playbook_rules;
+      const eval = data.strategy_evaluation;
+      const examples = data.trade_examples;
+      
+      let html = `
+        <h1 class="mb-4">${overview.name}</h1>
+        
+        <div class="card mb-4" style="background: linear-gradient(135deg, #2d4a5a 0%, #1a2d3d 100%); border: 2px solid #4a7a9f; color: white;">
+          <div class="card-body">
+            <h5 class="card-title" style="color: #a8c5ff; font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Strategy Overview</h5>
+            <p style="color: #d4e3f7; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">${overview.description}</p>
+            
+            <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 5px; border-left: 4px solid #a8c5ff; margin-bottom: 1rem;">
+              <p style="color: #d4e3f7; font-size: 0.9rem; margin: 0;"><strong style="color: #a8c5ff;">Objective:</strong> ${overview.objective}</p>
+            </div>
+            
+            <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 5px; border-left: 4px solid #a8d5a8;">
+              <p style="color: #d4e3f7; font-size: 0.9rem; margin-bottom: 0.5rem;"><strong style="color: #a8d5a8;">Trading Style:</strong> ${overview.built_for.trading_style.join(', ')}</p>
+              <p style="color: #d4e3f7; font-size: 0.9rem; margin: 0;"><strong style="color: #a8d5a8;">Instruments:</strong> ${overview.built_for.instruments.join(', ')}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card mb-4" style="background: linear-gradient(135deg, #2d5a3d 0%, #1a3d2a 100%); border: 2px solid #4a9f6e;">
+          <div class="card-body">
+            <h5 class="card-title" style="color: #a8d5a8; font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Execution Flow</h5>
+            <p style="color: #d4e3f7; font-size: 0.95rem; line-height: 1.6; margin: 0;">${overview.execution_flow}</p>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Playbook Rules</h3>
+        <p style="color: #d4e3f7; margin-bottom: 1.5rem;"><strong>${playbook.prerequisites}</strong></p>
+        
+        <div class="row">
+      `;
+      
+      // Add each rule
+      playbook.rules.forEach((rule, index) => {
+        html += `
+          <div class="col-12 mb-4">
+            <div class="card" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80;">
+              <div class="card-body">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
+                  <div style="width: 45px; height: 45px; background: #4a9f6e; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.3rem;">
+                    ${index + 1}
+                  </div>
+                  <h5 style="color: #a8d5a8; margin: 0; font-weight: 700;">${rule.rule}</h5>
+                </div>
+                
+                <p style="color: #d4e3f7; font-size: 0.95rem; line-height: 1.6; margin-bottom: 0.75rem;">${rule.description}</p>
+        `;
+        
+        if (rule.zones) {
+          html += `<div style="background: rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 5px; margin-bottom: 0.75rem;">`;
+          rule.zones.forEach(zone => {
+            html += `<p style="color: #a8d5a8; font-size: 0.9rem; margin: 0.25rem 0;">• ${zone}</p>`;
+          });
+          html += `</div>`;
+        }
+        
+        if (rule.confirmations) {
+          html += `<div style="background: rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 5px; margin-bottom: 0.75rem;">`;
+          rule.confirmations.forEach(conf => {
+            html += `<p style="color: #a8d5a8; font-size: 0.9rem; margin: 0.25rem 0;">✓ ${conf}</p>`;
+          });
+          html += `</div>`;
+        }
+        
+        if (rule.targets) {
+          html += `<div style="background: rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 5px;">`;
+          Object.entries(rule.targets).forEach(([key, value]) => {
+            const keyLabel = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            html += `<p style="color: #a8d5a8; font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>${keyLabel}:</strong> ${value}</p>`;
+          });
+          html += `</div>`;
+        }
+        
+        html += `
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += `
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Strategy Evaluation</h3>
+        
+        <div class="row mb-4">
+          <div class="col-12 col-lg-6">
+            <div class="card h-100" style="background: linear-gradient(135deg, #2d5a3d 0%, #1a3d2a 100%); border: 2px solid #4a9f6e;">
+              <div class="card-body">
+                <h5 class="card-title" style="color: #a8d5a8; font-weight: 700; margin-bottom: 1rem;">✓ Advantages</h5>
+      `;
+      
+      eval.pros.forEach(pro => {
+        html += `<p style="color: #d4e3f7; font-size: 0.9rem; margin-bottom: 0.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(168, 213, 168, 0.2);">• ${pro}</p>`;
+      });
+      
+      html += `
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-12 col-lg-6">
+            <div class="card h-100" style="background: linear-gradient(135deg, #5a2d2d 0%, #3d1a1a 100%); border: 2px solid #9f4a4a;">
+              <div class="card-body">
+                <h5 class="card-title" style="color: #ff9999; font-weight: 700; margin-bottom: 1rem;">⚠ Things to Be Aware Of</h5>
+      `;
+      
+      eval.cons.forEach(con => {
+        html += `<p style="color: #d4e3f7; font-size: 0.9rem; margin-bottom: 0.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(159, 74, 74, 0.2);">• ${con}</p>`;
+      });
+      
+      html += `
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-bottom: 1.5rem;">Trade Examples</h3>
+      `;
+      
+      // Add trade examples
+      examples.forEach((example, exIdx) => {
+        html += `
+          <div class="card mb-4" style="background: linear-gradient(135deg, #3d2d5a 0%, #2a1a3d 100%); border: 2px solid #7a4a9f;">
+            <div class="card-body">
+              <h4 style="color: #d4a8ff; font-weight: 700; margin-bottom: 0.5rem;">${example.name}</h4>
+              <p style="color: #a8c5ff; font-size: 0.9rem; margin-bottom: 1rem;"><em>${example.scenario}</em></p>
+              
+              <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 5px;">
+        `;
+        
+        example.breakdown.forEach((step, stepIdx) => {
+          html += `
+            <div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(212, 168, 255, 0.2);">
+              <h6 style="color: #d4a8ff; font-weight: 700; margin-bottom: 0.5rem;">Step ${stepIdx + 1}: ${step.step}</h6>
+              <p style="color: #d4e3f7; font-size: 0.9rem; line-height: 1.5; margin: 0; margin-bottom: 0.5rem;">${step.description}</p>
+          `;
+          
+          if (step.opportunities) {
+            step.opportunities.forEach(opp => {
+              html += `
+                <div style="background: rgba(255,255,255,0.05); padding: 0.75rem; margin-top: 0.5rem; border-radius: 4px; border-left: 3px solid #d4a8ff;">
+                  <p style="color: #a8c5ff; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.3rem;">${opp.entry}</p>
+                  <p style="color: #d4e3f7; font-size: 0.85rem; margin: 0;">${opp.description}</p>
+                </div>
+              `;
+            });
+          }
+          
+          if (step.execution) {
+            html += `
+              <div style="background: rgba(255,255,255,0.05); padding: 0.75rem; margin-top: 0.5rem; border-radius: 4px; border-left: 3px solid #a8d5a8;">
+                <p style="color: #a8d5a8; font-size: 0.85rem; margin-bottom: 0.3rem;"><strong>Entry:</strong> ${step.execution.entry}</p>
+                <p style="color: #a8d5a8; font-size: 0.85rem; margin-bottom: 0.3rem;"><strong>Stop:</strong> ${step.execution.stop}</p>
+                <p style="color: #a8d5a8; font-size: 0.85rem; margin: 0;"><strong>Target:</strong> ${step.execution.target}</p>
+              </div>
+            `;
+          }
+          
+          html += `</div>`;
+        });
+        
+        html += `
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      mainContent.innerHTML = html;
+    } catch (error) {
+      mainContent.innerHTML = '<p class="text-danger">Error loading Intraday Liquidity Volatility Model. Please check if IntradayLiquidityVolatilityModel.en.json exists.</p>';
+      console.error('Error loading model:', error);
+    }
   }
 
   function loadPropfirms(section = '') {

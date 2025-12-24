@@ -1,0 +1,50 @@
+{
+  "general": {
+    "colors": {
+      "white": "Bullish candle",
+      "orange": "Bearish candle"
+    },
+    "scope": "All patterns refer exclusively to the standard candlestick chart used in trading."
+  },
+  "patterns": {
+    "Doji": {
+      "description": "A candle with a very small or no real body where the opening and closing prices are almost or exactly the same. It signals market indecision and may indicate a potential trend reversal.",
+      "types": {
+        "Standard Doji": "Opening and closing prices are nearly identical, showing market indecision.",
+        "Long-Legged Doji": "Long upper and lower wicks indicating high volatility and balance between bulls and bears.",
+        "Dragonfly Doji": "Closing price near the high, suggesting a reversal from bearish to bullish.",
+        "Gravestone Doji": "Opening price near the high, suggesting a reversal from bullish to bearish."
+      }
+    },
+    "Hammer": {
+      "description": "A single candle with a small body and a long lower wick. It signals a possible reversal from bearish to bullish and should appear after a downtrend."
+    },
+    "Shooting Star": {
+      "description": "A single candle with a small body and a long upper wick. It indicates a possible reversal from bullish to bearish and should appear after an uptrend."
+    },
+    "Bullish Engulfing": {
+      "description": "A two-candle pattern where a small bearish candle is fully engulfed by a larger bullish candle. It suggests a reversal from bearish to bullish."
+    },
+    "Bearish Engulfing": {
+      "description": "A two-candle pattern where a small bullish candle is engulfed by a larger bearish candle. It suggests a reversal from bullish to bearish."
+    },
+    "Piercing Pattern": {
+      "description": "A two-candle pattern where a large bearish candle is partially engulfed by a bullish candle. It may indicate a reversal from bearish to bullish."
+    },
+    "Dark Cloud Cover": {
+      "description": "A two-candle pattern where a large bullish candle is partially engulfed by a bearish candle. It may indicate a reversal from bullish to bearish."
+    },
+    "Morning Star": {
+      "description": "A three-candle pattern indicating a reversal from bearish to bullish after a downtrend."
+    },
+    "Evening Star": {
+      "description": "A three-candle pattern indicating a reversal from bullish to bearish after an uptrend."
+    },
+    "Rising Three Methods": {
+      "description": "A multi-candle continuation pattern suggesting that the uptrend is likely to continue."
+    },
+    "Falling Three Methods": {
+      "description": "A multi-candle continuation pattern suggesting that the downtrend is likely to continue."
+    }
+  }
+}

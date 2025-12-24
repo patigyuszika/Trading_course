@@ -1,0 +1,60 @@
+{
+  "market_metaphor": {
+    "title": "The Roller Coaster of Markets and Life",
+    "content": "The stock market and life are like a roller coaster ride. It goes up and it goes down. Those who don't get sick from it always look forward to it again!"
+  },
+  "statistical_reality": {
+    "title": "The Harsh Statistics",
+    "content": "...90% of traders lose... ...90% of their investment in the first... ...90 days. How is that possible?"
+  },
+  "psychological_foundation": {
+    "title": "The Winner's Mentality Trap",
+    "content": "We are trained in our lives to come out as winners in everything. In school, in sports, in our careers, etc. This behavior/attitude is reflected in trading as well. Here too, ideally, one only wants to win.",
+    "market_reality": "But one must become aware that in the stock market, you are trading against other highly intellectual people, bankers, managers, and nowadays increasingly against computers, algorithms, and artificial intelligence that are several steps ahead of you and know all the rules of the game or even create them daily.",
+    "zero_sum_nature": "You must understand that in the stock market, you want the money of another trader, and the others want yours! Every time you realize a profit, there is a loser on the other side. And vice versa!"
+  },
+  "common_psychological_mistakes": [
+    {
+      "mistake": "Emotional Reactions",
+      "description": "Trading financial markets can trigger strong emotional reactions, especially when it comes to the risk of losses or the pressure to make quick decisions.",
+      "details": "Emotions like fear, greed, and overconfidence/lack of confidence can lead to irrational actions and impair a trader's ability to act objectively."
+    },
+    {
+      "mistake": "Loss Scenarios / Loss Aversion",
+      "description": "People tend to fear losses more strongly than they appreciate gains.",
+      "details": "This loss aversion can lead traders to hold losing positions for too long, hoping for a trend reversal, instead of limiting their losses. This can lead to further losses."
+    },
+    {
+      "mistake": "Confirmation Bias",
+      "description": "People often have a tendency to seek out and interpret information that confirms their existing beliefs and assumptions.",
+      "details": "In trading, this can lead traders to only look for information that confirms/supports their trading decisions, ignoring important counterarguments or opposing signals."
+    },
+    {
+      "mistake": "Overtrading",
+      "description": "A common mistake is excessive trading, where traders execute frequent and impulsive transactions instead of patiently waiting for high-quality trading opportunities.",
+      "details": "This can lead to higher trading costs and worse results."
+    },
+    {
+      "mistake": "Lack of Patience and Discipline",
+      "description": "Patience is an important quality in trading, but many traders are tempted to take profits prematurely or close loss positions too early.",
+      "details": "A lack of discipline can lead traders to disregard their own trading rules and make unreasonable decisions."
+    }
+  ],
+  "analysis_and_solution": {
+    "title": "Why These Mistakes Happen & How to Overcome Them",
+    "cause": "These mistakes are common because they reflect deeper psychological patterns that many people face.",
+    "solution": {
+      "overview": "To minimize them, it is important to understand your own trading psychology, be aware of emotional reactions, and develop strategies to manage these challenges.",
+      "methods": [
+        "Mental training",
+        "Self-reflection",
+        "Adhering to a trading strategy",
+        "Implementing risk management techniques"
+      ]
+    }
+  },
+  "core_principle": {
+    "title": "The Golden Rule",
+    "content": "Therefore, please become aware and always first look at how you can minimize your risk. How you can protect your money. Minimize losses and only then look for profits."
+  }
+}

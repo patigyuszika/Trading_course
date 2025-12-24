@@ -1,0 +1,51 @@
+{
+  "introduction": {
+    "title": "Welcome to the Next Level",
+    "content": "One day you decided to start day trading, to delve into the topic and to develop yourself further. You set out to find like-minded people and came across this server. Here on the server, you've already reached level 4 and are currently reading this text. You seem to be really serious about this!"
+  },
+  "mindset_overview": {
+    "title": "The Mindset - The Core of Trading",
+    "content": "Mindset translates roughly to 'one's own way of thinking' and is one of the most important aspects of trading. It's often said that 20% of trading is about knowledge, while 80% is about mindset. I can only confirm this! But what exactly is this 'mindset' all about?",
+    "breakdown": "20% Knowledge, 80% Mindset"
+  },
+  "key_pillars": [
+    {
+      "pillar": "Discipline",
+      "description": "The most important point is discipline. Discipline in trading as well as in other areas of life. You cannot be a disciplined trader if you are undisciplined in all other areas.",
+      "subpoints": {
+        "general_life": "Always prioritize tasks that need to be done over your leisure time, stay persistent, don't give up, be consistent, and allow no exceptions.",
+        "during_trading": "While trading, you must follow your own trading plan, adhere to your written-down rules, be patient, and not allow impulsive decisions.",
+        "post_trading": "After trading, document your actions every single day without exception in your trading journal (recommended channel: #1-trading-journal) and be prepared to review everything again at the end of the week. Be ready to put in a lot of work to find mistakes in your trading, make improvements, and implement them."
+      },
+      "challenge": "You are now aware of what it means to be disciplined. There are many more points, examples, and aspects of discipline... which would go beyond the scope of a single text. Prove your discipline to yourself and after this training, independently research more points on this topic. (Very few will actually do this, so be the exception!)"
+    },
+    {
+      "pillar": "Emotions",
+      "description": "Emotions are a major reason why most people fail in the stock market. Many trades are entered to recoup losses, because one feels the urge to rake in big profits, etc.",
+      "guidelines": [
+        "As already said regarding discipline, you must stick to your own trading plan; emotions have no place there.",
+        "Make your trading decisions not based on feeling, but on data and facts provided by your own analysis.",
+        "Be aware that trading is a game of probabilities and losses are part of it. Without losses, you are unable to generate profits.",
+        "Trust your own strategy, don't get excited about your wins, don't be sad, frustrated, or angry about your losses. Instead, view everything with 100% objectivity."
+      ],
+      "mantra": "Trade like a robot."
+    },
+    {
+      "pillar": "Attitude & Long-Term Perspective",
+      "description": "Maintain a positive and resilient attitude for the long haul.",
+      "principles": [
+        "Always stay positive and don't let negativity get to you.",
+        "Always be prepared to take the longer and harder path.",
+        "Think long-term and don't focus on quick success.",
+        "Be a strong character, don't let anyone talk you into things that throw you off your path.",
+        "Create a mental and physical balance for yourself, e.g., through sports.",
+        "Don't shy away from investing in yourself and your knowledge (books, courses, mentoring...). The best investment is always in yourself!"
+      ]
+    }
+  ],
+  "conclusion": {
+    "title": "The Journey Ahead",
+    "content": "The topic of mindset is incredibly extensive and is not concluded with this training. I have tried to give you the best foundation, but I urge you to absolutely do your own research again and take the #1-book-recommendations to heart.",
+    "final_message": "The path to becoming a profitable trader is long and hard! Look forward to this journey instead of fearing it, stay consistently on the ball, allow no exceptions, and let trading become your priority."
+  }
+}

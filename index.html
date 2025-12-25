@@ -17,6 +17,13 @@
     body {
         background-color: #a8abb9;
         overflow-x: hidden;
+        padding-top: 0;
+    }
+
+    @media (max-width: 767.98px) {
+        body {
+            padding-top: 60px;
+        }
     }
 
     /* Mobile navbar line */
@@ -242,6 +249,10 @@
 
     /* Mobile responsive styles */
     @media (max-width: 767.98px) {
+        h1, h2, h3, h4, h5, h6 {
+            scroll-margin-top: 60px;
+        }
+
         .mobile-navbar {
             display: flex;
         }
@@ -279,7 +290,8 @@
         main {
             width: 100% !important;
             margin-left: 0 !important;
-            padding: 80px 15px 20px !important;
+            padding: 20px 15px 20px !important;
+            margin-top: 0;
         }
 
         .flip-card {
@@ -309,6 +321,13 @@
             display: none;
         }
 
+        .sr-content-image {
+            max-width: 80% !important;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
         aside {
             width: 35%;
             position: fixed;
@@ -330,6 +349,13 @@
 
         .mobile-menu-toggle {
             display: none;
+        }
+
+        .sr-content-image {
+            max-width: 70% !important;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         aside {
@@ -420,7 +446,7 @@
                     <a class="nav-link text-white submenu-item" onclick="loadBasics('support-resistance')">Support &amp; Resistance</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white submenu-item" onclick="loadBasics('indicators')">Indicators</a>
+                    <a class="nav-link text-white submenu-item" onclick="loadBasics('order-types')">Order types</a>
                 </li>
                 </ul>
             </div>
@@ -547,6 +573,14 @@
     }
   }
 
+  // Scroll to top
+  function scrollToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }
+
   // Setup mobile flip cards
   function setupMobileFlipCards() {
     const flipCards = document.querySelectorAll('.flip-card');
@@ -569,40 +603,39 @@
 
   function loadHome() {
     closeSidebarOnMobile();
+    scrollToTop();
     const mainContent = document.querySelector('main');
     mainContent.innerHTML = `
       <div class="container py-5">
-        <h1 class="mb-4 text-center">Üdvözöllek a TSJ Trading Course-on!</h1>
-        
-
+        <h1 class="mb-4 text-center">Welcome to TSJ Course!</h1>
         <div class="row justify-content-center mb-5">
           <div class="col-lg-8">
             <div class="ratio ratio-16x9 mb-4">
               <iframe 
-                src="https://www.youtube.com/watch?v=DLzxrzFCyOs&list=RDDLzxrzFCyOs&start_radio=1" 
-                title="Bevezető Videó" 
+                src="https://www.youtube.com/embed/FVo4W-thoX0" 
+                title="Introduction Video" 
                 allowfullscreen
                 style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
               </iframe>
             </div>
-            <p class="text-center text-muted small">A videóra rákattintva egy kis bevezetést kapsz az oldal értelméről.</p>
+            <p class="text-center text-muted small">By clicking the video, you get a brief introduction to the purpose of the site.</p>
           </div>
         </div>
 
         <div class="row justify-content-center">
           <div class="col-lg-6">
-            <h3 class="text-center mb-4">Kövess a közösségi médiában!</h3>
+            <h3 class="text-center mb-4">Follow on Social Media</h3>
             <div class="d-flex justify-content-center gap-4 flex-wrap">
               <a href="https://www.instagram.com/stenzeljurgen/" target="_blank" class="btn btn-outline-light btn-lg" style="min-width: 120px;">
                 <i class="bi bi-instagram"></i> Instagram
               </a>
-              <a href="https://youtube.com/@yourchannel" target="_blank" class="btn btn-outline-light btn-lg" style="min-width: 120px;">
+              <a href="https://youtube.com/@jurgenstenzel3857" target="_blank" class="btn btn-outline-light btn-lg" style="min-width: 120px;">
                 <i class="bi bi-youtube"></i> YouTube
               </a>
-              <a href="https://twitter.com/yourprofile" target="_blank" class="btn btn-outline-light btn-lg" style="min-width: 120px;">
+              <a href="https://twitter.com/stenzeljurgen" target="_blank" class="btn btn-outline-light btn-lg" style="min-width: 120px;">
                 <i class="bi bi-twitter"></i> Twitter
               </a>
-              <a href="https://discord.gg/yourinvite" target="_blank" class="btn btn-outline-light btn-lg" style="min-width: 120px;">
+              <a href="https://discord.gg/tHpB9XhT" target="_blank" class="btn btn-outline-light btn-lg" style="min-width: 120px;">
                 <i class="bi bi-discord"></i> Discord
               </a>
             </div>
@@ -615,6 +648,7 @@
 
   function loadMain() {
     closeSidebarOnMobile();
+    scrollToTop();
     const mainContent = document.querySelector('main');
     mainContent.innerHTML = `
       <h1 class="mb-4">Vision Board 2026</h1>
@@ -723,17 +757,300 @@
 
   function loadBasics(section = '') {
     closeSidebarOnMobile();
+    scrollToTop();
     const mainContent = document.querySelector('main');
     const title = 'Basics';
     
     if (section === 'candlesticks') {
       loadCandlesticks();
+    } else if (section === 'support-resistance') {
+      loadSupportResistance();
+    } else if (section === 'order-types') {
+      loadOrderTypes();
     } else {
       const contentMap = {
-        'support-resistance': '<h2>Support & Resistance</h2><p>Támasz/ellenállás alapok…</p>',
-        'indicators': '<h2>Indicators</h2><p>Indikátorok áttekintése…</p>'
       };
       mainContent.innerHTML = contentMap[section] || `<h2>${title}</h2><p>Válassz egy témát a lenyílóból.</p>`;
+    }
+  }
+
+  // Load Support & Resistance from JSON
+  async function loadSupportResistance() {
+    const mainContent = document.querySelector('main');
+    
+    try {
+      const response = await fetch('supportandresistance.en.json');
+      const data = await response.json();
+      
+      let html = `
+        <h1 class="mb-4">${data.guide_overview.title}</h1>
+        
+        <div class="card mb-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80; color: white;">
+          <div class="card-body">
+            <p>${data.guide_overview.introduction}</p>
+            <h5 class="mt-3 mb-2">Topics covered:</h5>
+            <ul>
+      `;
+      
+      data.guide_overview.topics.forEach(topic => {
+        html += `<li>${topic}</li>`;
+      });
+      
+      html += `
+            </ul>
+          </div>
+        </div>
+        
+        <h2 class="mb-4 mt-5">Identification Methods</h2>
+      `;
+      
+      data.identification_methods.forEach(method => {
+        html += `
+          <div class="card mb-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80; color: white;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: #6ba3d4; font-weight: 600;">${method.method}</h5>
+              <p class="card-text">${method.description}</p>
+        `;
+        
+        if (method.image_url) {
+          html += `
+            <div style="margin: 1.5rem 0; max-width: 100%;">
+              <img src="${method.image_url}" alt="${method.method}" class="sr-content-image" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+            </div>
+          `;
+        }
+        
+        if (method.application_areas) {
+          html += `<h6 style="color: #d4e3f7; margin-top: 1rem;">Application Areas:</h6><ul>`;
+          method.application_areas.forEach(area => {
+            html += `<li style="color: #d4e3f7; font-size: 0.9rem;">${area}</li>`;
+          });
+          html += `</ul>`;
+        }
+        
+        if (method.drawing_methods) {
+          html += `<h6 style="color: #d4e3f7; margin-top: 1rem;">Drawing Methods:</h6><ul>`;
+          method.drawing_methods.forEach(dm => {
+            html += `<li style="color: #d4e3f7; font-size: 0.9rem;">${dm}</li>`;
+          });
+          html += `</ul>`;
+        }
+        
+        if (method.key_principles) {
+          html += `<h6 style="color: #d4e3f7; margin-top: 1rem;">Key Principles:</h6><ul>`;
+          method.key_principles.forEach(kp => {
+            html += `<li style="color: #d4e3f7; font-size: 0.9rem;">${kp}</li>`;
+          });
+          html += `</ul>`;
+        }
+        
+        if (method.key_levels) {
+          html += `<h6 style="color: #d4e3f7; margin-top: 1rem;">Key Levels:</h6><ul>`;
+          method.key_levels.forEach(level => {
+            html += `<li style="color: #d4e3f7; font-size: 0.9rem;">${level}</li>`;
+          });
+          html += `</ul>`;
+        }
+        
+        if (method.application) {
+          html += `<p style="color: #d4e3f7; font-size: 0.9rem; margin-top: 1rem;"><strong>Application:</strong> ${method.application}</p>`;
+        }
+        
+        if (method.purpose) {
+          html += `<p style="color: #d4e3f7; font-size: 0.9rem;"><strong>Purpose:</strong> ${method.purpose}</p>`;
+        }
+        
+        html += `</div></div>`;
+      });
+      
+      html += `
+        <h2 class="mb-4 mt-5">Correct Application</h2>
+        <div class="card mb-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80; color: white;">
+          <div class="card-body">
+            <h5 class="card-title" style="color: #6ba3d4; font-weight: 600;">${data.correct_application.title}</h5>
+            <p class="card-text" style="color: #d4e3f7;"><strong>Core Principle:</strong> ${data.correct_application.core_principle}</p>
+            <hr style="border-color: #3d5a80;">
+            <p class="card-text" style="color: #d4e3f7;"><strong>Significance Rule:</strong> ${data.correct_application.significance_rule}</p>
+            <p class="card-text" style="color: #d4e3f7;"><strong>Holding Definition:</strong> ${data.correct_application.definition_of_holding}</p>
+            <p class="card-text" style="color: #d4e3f7;"><strong>Break Definition:</strong> ${data.correct_application.definition_of_break}</p>
+            <p class="card-text" style="color: #d4e3f7;"><strong>Recognition Signals:</strong> ${data.correct_application.recognition_signals}</p>
+            <p class="card-text" style="color: #d4e3f7;"><strong>Polarity Principle:</strong> ${data.correct_application.polarity_principle}</p>
+          </div>
+        </div>
+        
+        <h2 class="mb-4 mt-5">Key Takeaways</h2>
+        <div class="card" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80; color: white;">
+          <div class="card-body">
+            <ul>
+      `;
+      
+      data.summary.key_takeaways.forEach(takeaway => {
+        html += `<li style="color: #d4e3f7; margin-bottom: 0.5rem;">${takeaway}</li>`;
+      });
+      
+      html += `
+            </ul>
+          </div>
+        </div>
+      `;
+      
+      mainContent.innerHTML = html;
+    } catch (error) {
+      mainContent.innerHTML = '<p class="text-danger">Error loading Support & Resistance. Please check if supportandresistance.en.json exists.</p>';
+      console.error('Error loading support & resistance:', error);
+    }
+  }
+
+  // Load Order Types from JSON
+  async function loadOrderTypes() {
+    const mainContent = document.querySelector('main');
+    
+    try {
+      const response = await fetch('ordertype.en.json');
+      const data = await response.json();
+      
+      let html = `
+        <h1 class="mb-4">${data.guide_overview.title}</h1>
+        
+        <div class="card mb-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80; color: white;">
+          <div class="card-body">
+            <p>${data.guide_overview.introduction}</p>
+            <h5 class="mt-3 mb-2">Primary Order Types:</h5>
+            <ul>
+      `;
+      
+      data.guide_overview.primary_order_types.forEach(type => {
+        html += `<li>${type}</li>`;
+      });
+      
+      html += `
+            </ul>
+          </div>
+        </div>
+        
+        <h2 class="mb-4 mt-5">Basic Order Types</h2>
+      `;
+      
+      data.basic_order_types.forEach(order => {
+        html += `
+          <div class="card mb-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80; color: white;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: #6ba3d4; font-weight: 600;">${order.type}</h5>
+              <p class="card-text" style="color: #d4e3f7;"><strong>Definition:</strong> ${order.definition}</p>
+              
+              <h6 style="color: #d4e3f7; margin-top: 1rem;">Key Characteristics:</h6>
+              <ul>
+        `;
+        
+        order.key_characteristics.forEach(char => {
+          html += `<li style="color: #d4e3f7; font-size: 0.9rem;">${char}</li>`;
+        });
+        
+        html += `
+              </ul>
+              <p class="card-text" style="color: #d4e3f7; margin-top: 1rem;"><strong>Use Case:</strong> ${order.use_case}</p>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += `<h2 class="mb-4 mt-5">Advanced Order Types</h2>`;
+      
+      data.advanced_order_types.forEach(advOrder => {
+        html += `
+          <div class="card mb-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80; color: white;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: #6ba3d4; font-weight: 600;">${advOrder.type}</h5>
+              <p class="card-text" style="color: #d4e3f7;"><strong>Definition:</strong> ${advOrder.definition}</p>
+        `;
+        
+        if (advOrder.variations) {
+          html += `<h6 style="color: #d4e3f7; margin-top: 1rem;">Variations:</h6>`;
+          advOrder.variations.forEach(variation => {
+            html += `
+              <div style="background: rgba(0,0,0,0.2); padding: 0.75rem; border-radius: 5px; margin-bottom: 1rem;">
+                <p style="color: #6ba3d4; font-weight: 600; margin: 0;">${variation.name}</p>
+                <p style="color: #d4e3f7; font-size: 0.9rem; margin: 0.5rem 0 0 0;"><strong>Scenario:</strong> ${variation.scenario}</p>
+                <p style="color: #d4e3f7; font-size: 0.9rem; margin: 0.25rem 0;"><strong>Execution:</strong> ${variation.execution}</p>
+                <p style="color: #d4e3f7; font-size: 0.9rem; margin: 0.25rem 0;"><strong>Purpose:</strong> ${variation.purpose}</p>
+              </div>
+            `;
+          });
+        }
+        
+        if (advOrder.example) {
+          html += `
+            <h6 style="color: #d4e3f7; margin-top: 1rem;">Example</h6>
+            <p style="color: #d4e3f7; font-size: 0.9rem;"><strong>Scenario:</strong> ${advOrder.example.scenario}</p>
+            <ul>
+          `;
+          advOrder.example.execution_flow.forEach(step => {
+            html += `<li style="color: #d4e3f7; font-size: 0.9rem;">${step}</li>`;
+          });
+          html += `</ul>`;
+        }
+        
+        if (advOrder.key_characteristics) {
+          html += `
+            <h6 style="color: #d4e3f7; margin-top: 1rem;">Key Characteristics:</h6>
+            <ul>
+          `;
+          advOrder.key_characteristics.forEach(char => {
+            html += `<li style="color: #d4e3f7; font-size: 0.9rem;">${char}</li>`;
+          });
+          html += `</ul>`;
+        }
+        
+        if (advOrder.important_note) {
+          html += `<p style="color: #ff6b6b; font-style: italic; margin-top: 1rem;"><strong>Important:</strong> ${advOrder.important_note}</p>`;
+        }
+        
+        html += `</div></div>`;
+      });
+      
+      html += `
+        <h2 class="mb-4 mt-5">Comparison Summary</h2>
+        <div class="card mb-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80; color: white;">
+          <div class="card-body">
+            <h6 style="color: #d4e3f7;">Execution Guarantee:</h6>
+            <ul style="color: #d4e3f7; font-size: 0.9rem;">
+              <li><strong>Highest:</strong> ${data.comparison_summary.execution_guarantee.highest}</li>
+              <li><strong>Conditional:</strong> ${data.comparison_summary.execution_guarantee.conditional}</li>
+              <li><strong>Price Based:</strong> ${data.comparison_summary.execution_guarantee.price_based}</li>
+            </ul>
+            
+            <h6 style="color: #d4e3f7; margin-top: 1rem;">Speed of Execution:</h6>
+            <ul style="color: #d4e3f7; font-size: 0.9rem;">
+              <li><strong>Fastest:</strong> ${data.comparison_summary.speed_of_execution.fastest}</li>
+              <li><strong>Triggered:</strong> ${data.comparison_summary.speed_of_execution.triggered}</li>
+              <li><strong>Price Controlled:</strong> ${data.comparison_summary.speed_of_execution.price_controlled}</li>
+            </ul>
+            
+            <h6 style="color: #d4e3f7; margin-top: 1rem;">Primary Use Cases:</h6>
+            <ul style="color: #d4e3f7; font-size: 0.9rem;">
+              <li><strong>Immediate Execution:</strong> ${data.comparison_summary.primary_use_cases.immediate_execution}</li>
+              <li><strong>Price Control:</strong> ${data.comparison_summary.primary_use_cases.price_control}</li>
+              <li><strong>Risk Management:</strong> ${data.comparison_summary.primary_use_cases.risk_management}</li>
+              <li><strong>Trend Following:</strong> ${data.comparison_summary.primary_use_cases.trend_following}</li>
+              <li><strong>Precision Entry/Exit:</strong> ${data.comparison_summary.primary_use_cases.precision_entry_exit}</li>
+            </ul>
+          </div>
+        </div>
+        
+        <h2 class="mb-4 mt-5">Practical Application</h2>
+        <div class="card" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80; color: white;">
+          <div class="card-body">
+            <p style="color: #d4e3f7;"><strong>Risk Management Note:</strong> ${data.practical_application.risk_management_note}</p>
+            <p style="color: #d4e3f7;"><strong>Liquidity Consideration:</strong> ${data.practical_application.liquidity_consideration}</p>
+            <p style="color: #d4e3f7;"><strong>Strategy Integration:</strong> ${data.practical_application.strategy_integration}</p>
+          </div>
+        </div>
+      `;
+      
+      mainContent.innerHTML = html;
+    } catch (error) {
+      mainContent.innerHTML = '<p class="text-danger">Error loading Order Types. Please check if ordertype.en.json exists.</p>';
+      console.error('Error loading order types:', error);
     }
   }
 
@@ -834,6 +1151,7 @@
 
   function loadPsychology(section = '') {
     closeSidebarOnMobile();
+    scrollToTop();
     const mainContent = document.querySelector('main');
     const title = 'Psychology';
     
@@ -1157,6 +1475,7 @@
 
   function loadStrategy(section = '') {
     closeSidebarOnMobile();
+    scrollToTop();
     const mainContent = document.querySelector('main');
     const title = 'Strategy';
     
@@ -1361,6 +1680,7 @@
 
   function loadPropfirms(section = '') {
     closeSidebarOnMobile();
+    scrollToTop();
     const mainContent = document.querySelector('main');
     const title = 'Propfirms';
     const contentMap = {
@@ -1374,6 +1694,7 @@
   // Load lexicon from JSON
   async function loadLexicon() {
     closeSidebarOnMobile();
+    scrollToTop();
     const mainContent = document.querySelector('main');
     
     try {

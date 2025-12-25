@@ -1,0 +1,95 @@
+{
+  "guide_overview": {
+    "title": "Order Types in Trading",
+    "introduction": "For the price formation process in various trading forms, two basic order types are permitted.",
+    "primary_order_types": [
+      "Market Orders",
+      "Limit Orders"
+    ]
+  },
+  "basic_order_types": [
+    {
+      "type": "Market Order",
+      "definition": "These are unlimited buy or sell orders that should be executed at the next possible price determination.",
+      "key_characteristics": [
+        "Highest probability of execution",
+        "Used when the order needs to be executed as quickly as possible",
+        "Executed at the best available current market price"
+      ],
+      "use_case": "Traders use market orders when the order should be executed as quickly as possible."
+    },
+    {
+      "type": "Limit Order",
+      "definition": "These are buy or sell orders that should be executed at the specified price limit or better.",
+      "key_characteristics": [
+        "The price limit allows the market participant to define the maximum price they are willing to pay (for buys) or the minimum price they are willing to accept (for sells)",
+        "Offers price certainty but no execution guarantee",
+        "Order only executes if the specified price or better is available"
+      ],
+      "use_case": "Used when price is more important than immediate execution."
+    }
+  ],
+  "advanced_order_types": [
+    {
+      "type": "Stop Market Order",
+      "definition": "This order is only entered into the order book when the stop price limit is reached and is then executed like a market order.",
+      "variations": [
+        {
+          "name": "Stop Buy Order",
+          "scenario": "When buying a stock with a Stop Market Order above the current price",
+          "execution": "The order is triggered when the price is reached and the stock is automatically bought at the next possible price.",
+          "purpose": "With Stop Buy Orders, one attempts to follow the trend by buying the security during rising prices."
+        },
+        {
+          "name": "Stop Loss Order",
+          "scenario": "When selling a stock with a Stop Market Order below the current price",
+          "execution": "The order is triggered when the price is reached and the stock is automatically sold at the next possible price.",
+          "purpose": "Stop Loss Orders are used by traders to limit losses in open positions and/or to secure profits."
+        }
+      ],
+      "important_note": "There is no guarantee that an order triggered by the stop price will be executed."
+    },
+    {
+      "type": "Stop Limit Order",
+      "definition": "With this order, when the stop limit is reached, the order is not entered as a market order but as a limit order into the order book.",
+      "example": {
+        "scenario": "Example of a Stop Limit Order to buy with a stop limit of 101 and an execution limit of 102",
+        "execution_flow": [
+          "When price reaches 101, a buy order with execution limit 102 is automatically placed",
+          "If the price has meanwhile risen above 102, the limit order will not be executed"
+        ]
+      },
+      "key_characteristics": [
+        "Combines features of stop orders and limit orders",
+        "No execution guarantee exists",
+        "The limit order will not be executed at the next price determination if:",
+        "  - For Stop Buy Orders: the next price is above the price limit",
+        "  - For Stop Loss Orders: the next price is below the price limit"
+      ]
+    }
+  ],
+  "comparison_summary": {
+    "execution_guarantee": {
+      "highest": "Market Order",
+      "conditional": "Stop Market Order (when triggered)",
+      "price_based": "Limit Order & Stop Limit Order (only at specified price or better)"
+    },
+    "speed_of_execution": {
+      "fastest": "Market Order",
+      "triggered": "Stop Market Order",
+      "price_controlled": "Limit Order & Stop Limit Order"
+    },
+    "primary_use_cases": {
+      "immediate_execution": "Market Order",
+      "price_control": "Limit Order",
+      "risk_management": "Stop Market Order (Stop Loss)",
+      "trend_following": "Stop Market Order (Stop Buy)",
+      "precision_entry/exit": "Stop Limit Order"
+    }
+  },
+  "practical_application": {
+    "risk_management_note": "Stop orders are crucial for risk management but do not guarantee execution, especially in fast-moving or gapping markets.",
+    "liquidity_consideration": "Market orders work best in liquid markets; in illiquid markets, they may result in unfavorable prices.",
+    "strategy_integration": "Different trading strategies require different order types - scalpers often use market orders, while swing traders may prefer limit orders."
+  }
+}

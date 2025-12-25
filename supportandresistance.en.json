@@ -1,0 +1,74 @@
+{
+  "guide_overview": {
+    "title": "Support and Resistance - Identification and Application",
+    "introduction": "By now you should know what support and resistance mean. Now it's about identifying these price areas in the market and applying them correctly. We will cover the following points.",
+    "topics": [
+      "Horizontal Lines",
+      "Trendlines",
+      "Fibonacci Retracements",
+      "Correct Application"
+    ]
+  },
+  "identification_methods": [
+    {
+      "method": "Horizontal Lines",
+      "description": "They should mark significant highs or lows, such as the impulse high/low or the correction high/low of a trend movement.",
+      "image_url": "https://cdn.discordapp.com/attachments/1375868254349819904/1375868296091668743/1.jpeg?ex=694e0a74&is=694cb8f4&hm=4e3e1764bc3a2c051a5aaec4c2a1d7f96fb55df70589de472cb02da53fb51525&",
+      "application_areas": [
+        "Marking impulse highs/lows and correction highs/lows of a trend movement",
+        "Marking gap levels",
+        "Marking psychological price levels (e.g., 100 Euros) as these are also recognized as support and resistance",
+        "In intraday trading: marking the opening price of the respective trading day, as this also acts as support and resistance"
+      ],
+      "visual_aid_note": "Image reference available in original material"
+    },
+    {
+      "method": "Trendlines",
+      "description": "They connect higher highs/lows and lower lows/highs and, with their angle of inclination, provide information about the strength of a trend.",
+      "image_url": "https://cdn.discordapp.com/attachments/1375868254349819904/1375868367956873397/2.jpeg?ex=694e0a85&is=694cb905&hm=58ac023b1b380ccad58d2dd4c0a34804753e2023a35b77ac23c8393f802d1f50&",
+      "drawing_methods": [
+        "From wick to wick",
+        "From shadow to shadow",
+        "From candle body to candle body"
+      ],
+      "key_principles": [
+        "When a trendline is approached again, support or resistance is naturally expected.",
+        "The more touchpoints a trendline has, the higher its significance."
+      ],
+      "visual_aid_note": "Image reference available in original material"
+    },
+    {
+      "method": "Fibonacci Retracements",
+      "description": "A tool to determine the length of a correction movement during a trend.",
+      "image_url": "https://cdn.discordapp.com/attachments/1375868254349819904/1375868506050138172/3.jpeg?ex=694e0aa6&is=694cb926&hm=404b1514ce03f8c7a7e2015467555a5fc3067a6242383aa2758e698feb25aae5&",
+      "application": "A Fibonacci retracement is applied by using the tool in the respective chart software to mark the high and low points of an impulse movement.",
+      "key_levels": [
+        "23.6%",
+        "38.2%",
+        "50%",
+        "61.8%",
+        "78.6%"
+      ],
+      "purpose": "The respective percentage levels can serve as support and resistance during a correction phase.",
+      "visual_aid_note": "Image reference available in original material"
+    }
+  ],
+  "correct_application": {
+    "title": "Correct Application of Support and Resistance",
+    "core_principle": "As with all other types of technical analysis, a standalone support or resistance area should not be blindly used as an entry, but should always be combined with other analysis tools! More on this in the #4-zones channel.",
+    "significance_rule": "Similar to trendlines, the rule applies: the more often a support or resistance has already held, the more significant this price area is.",
+    "definition_of_holding": "Such a price area is considered as holding if it was not broken by a candle's closing price (support not closed below, resistance not closed above).",
+    "definition_of_break": "Conversely, such an area is considered broken if it is closed below (support) or above (resistance) by a candle's closing price.",
+    "recognition_signals": "If we see a rejection in the form of wicks or shadows at the price area, this is a first sign that this price is recognized by the market and that the support or resistance might hold.",
+    "polarity_principle": "For all types of support/resistance, the principle of changing polarity applies, which we explained in the #0-introduction channel."
+  },
+  "summary": {
+    "key_takeaways": [
+      "Support and resistance are dynamic concepts that require proper identification and contextual application.",
+      "Multiple methods (horizontal lines, trendlines, Fibonacci) should be used in conjunction for higher probability setups.",
+      "The strength of a level increases with the number of times price has respected it.",
+      "Always confirm with price action (rejections, closes beyond levels) before making trading decisions.",
+      "Polarity shifts (support becomes resistance, resistance becomes support) are a fundamental market behavior."
+    ]
+  }
+}

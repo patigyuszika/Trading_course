@@ -1,0 +1,190 @@
+{
+  "firm_overview": {
+    "name": "Alpha Capital Group",
+    "broker": "ACG Markets",
+    "platforms": ["cTrader", "DXTrade", "MT5", "TradeLocker"],
+    "payment_methods": ["Apple Pay", "Credit/Debit Card", "Crypto", "Google Pay", "PayPal"],
+    "payout_methods": ["Bank Transfer", "Riseworks", "Wise"]
+  },
+  "instruments_and_assets": {
+    "instrument_type": "CFD",
+    "assets": ["FX", "Metals", "Indices", "Energy"]
+  },
+  "leverage": {
+    "assets": [
+      {
+        "asset": "FX",
+        "instant": "n/a",
+        "1_step": "1:30",
+        "2_steps": "1:100",
+        "3_steps": "1:50"
+      },
+      {
+        "asset": "Metals",
+        "instant": "n/a",
+        "1_step": "1:9",
+        "2_steps": "1:30",
+        "3_steps": "1:9"
+      },
+      {
+        "asset": "Indices",
+        "instant": "n/a",
+        "1_step": "1:10",
+        "2_steps": "1:20",
+        "3_steps": "1:10"
+      },
+      {
+        "asset": "Energy",
+        "instant": "n/a",
+        "1_step": "1:10",
+        "2_steps": "1:10",
+        "3_steps": "1:10"
+      }
+    ]
+  },
+  "commissions": {
+    "fx": {
+      "raw": "$5",
+      "standard": "$0"
+    },
+    "metals": {
+      "raw": "$5",
+      "standard": "$0"
+    },
+    "indices": "No Commissions",
+    "energy": "No Commissions"
+  },
+  "consistency_rules": {
+    "on_demand_payout_requirements": {
+      "consistency_rule": "40%",
+      "minimum_gross_profit": "2%"
+    }
+  },
+  "firm_rules": {
+    "inactivity_rule": {
+      "description": "All accounts will be deactivated after 30 days of inactivity.",
+      "requirements": ["Log in and maintain an active connection to avoid deactivation"],
+      "consequences": ["Once deactivated, accounts cannot be restored"]
+    },
+    "all_or_nothing": {
+      "description": "All or nothing practices are prohibited."
+    },
+    "average_trade_duration": {
+      "minimum_duration": "2 minutes",
+      "requirements": [
+        "Traders must ensure that the average duration of all their trades exceeds 2 minutes.",
+        "At least 50% of the requested profit must come from trades that exceed 2 minutes."
+      ]
+    },
+    "order_block_spamming": {
+      "description": "Entering multiple orders in a short period of time is prohibited."
+    },
+    "news_trading": {
+      "qualified_analyst_accounts": {
+        "allowed_only_for": "Swing accounts",
+        "trading_window_rule": "If a trade is initiated within 2 minutes before or up to 2 minutes after a news release (a 4-minute window), its duration must exceed 2 minutes for the trade to be valid."
+      },
+      "alpha_pro_8_10_accounts": {
+        "restriction": "Trading around high-impact news is restricted to 2 minutes before or after the news release."
+      },
+      "alpha_one_pro_6_three_accounts": {
+        "restriction": "Trading around high-impact news is restricted to 5 minutes before or after the news release."
+      },
+      "evaluation_program": {
+        "restriction": "News trading is allowed in all evaluation program without any restriction."
+      }
+    },
+    "drawdown_adjustment_alpha_one": {
+      "rule": "If your 6% trailing Max Drawdown resets to the initial balance after reaching a 6% profit, maintain a profit buffer to keep trading.",
+      "consequence": "Withdrawing all profits will result in account closure."
+    },
+    "risk_management": {
+      "rule": "Consistently losing or risking 2% or more in a single trade or sequence of trades closed around the same time is prohibited."
+    },
+    "qualified_analyst_allocation": {
+      "maximum_allocation": "$300,000",
+      "definition": "Maximum allocation per trading strategy on a Qualified Analyst Account.",
+      "strategy_definition": "\"Strategy\" is defined as the assets themselves."
+    },
+    "copy_trading": {
+      "allowed_for": "Personal accounts only",
+      "requirements": ["Proof of ownership is required if Alpha capital account is to be treated as slave", "MT5 only"],
+      "documentation_url": "https://help.alphacapitalgroup.uk/en/articles/8786973-is-copy-trading-allowed",
+      "prop_firm_one_partnership": {
+        "partner": "Prop Firm One",
+        "capability": "Extend copy trading capabilities",
+        "functionality": "Allows traders to seamlessly copy trades across different proprietary firm accounts within a single platform",
+        "benefits": ["Increased flexibility", "Broader range of opportunities", "Manage trades across multiple firms", "Enhanced scalability", "Trading efficiency"],
+        "restriction": "Without breaching Alpha Capital's core rules",
+        "website": "PropFirmOne.com"
+      }
+    }
+  },
+  "maximum_lot_sizes": {
+    "alpha_swing": [
+      {"account_size": "$5k", "max_lots": "1.25"},
+      {"account_size": "$10k", "max_lots": "2.5"},
+      {"account_size": "$25k", "max_lots": "5"},
+      {"account_size": "$50k", "max_lots": "10"},
+      {"account_size": "$100k", "max_lots": "20"},
+      {"account_size": "$200k", "max_lots": "40"},
+      {"account_size": "$300k", "max_lots": "60"}
+    ],
+    "alpha_one_pro_6_8_10_three": [
+      {"account_size": "$5k", "max_lots": "2.5"},
+      {"account_size": "$10k", "max_lots": "5"},
+      {"account_size": "$25k", "max_lots": "10"},
+      {"account_size": "$50k", "max_lots": "20"},
+      {"account_size": "$100k", "max_lots": "40"},
+      {"account_size": "$200k", "max_lots": "80"},
+      {"account_size": "$300k", "max_lots": "120"}
+    ],
+    "note": "Alpha One, Alpha Pro 6%, Alpha Pro 8/10% and Alpha Three have the same lot size limits"
+  },
+  "payout_policy": {
+    "available_options": {
+      "biweekly_payout": ["Alpha Pro 8/10%", "Alpha Pro 6%", "Alpha Three plans"],
+      "two_percent_on_demand": ["Alpha Pro 8/10%", "Alpha Pro 6%", "Alpha Three", "Alpha Swing", "Alpha One plans"]
+    },
+    "biweekly_payout_details": {
+      "first_payout_requirement": "Minimum of 5 trading days using the same trading strategy",
+      "frequency": "Every 14 days",
+      "minimum_withdrawal": "$100 in gross profits"
+    },
+    "two_percent_on_demand_details": {
+      "availability": "Traders can request payouts anytime",
+      "requirements": [
+        "Achieve the 40% Best Day Rule",
+        "Have at least 2% of gross profits in the account balance"
+      ],
+      "best_day_rule": "40% Best Day Rule: No single trading day can contribute more than 40% of total profits"
+    },
+    "plan_restrictions": {
+      "alpha_swing_alpha_one": "Only the 2% On Demand option is available"
+    }
+  },
+  "account_types_summary": {
+    "alpha_swing": {
+      "payout_option": "2% On Demand only",
+      "news_trading": "Allowed",
+      "lot_sizes": "Smaller than other accounts"
+    },
+    "alpha_one": {
+      "payout_option": "2% On Demand only",
+      "news_trading_restriction": "5 minutes before/after high-impact news",
+      "drawdown_rule": "6% trailing Max Drawdown with reset rules"
+    },
+    "alpha_pro_6": {
+      "payout_options": ["Biweekly Payout", "2% On Demand"],
+      "news_trading_restriction": "5 minutes before/after high-impact news"
+    },
+    "alpha_pro_8_10": {
+      "payout_options": ["Biweekly Payout", "2% On Demand"],
+      "news_trading_restriction": "2 minutes before/after high-impact news"
+    },
+    "alpha_three": {
+      "payout_options": ["Biweekly Payout", "2% On Demand"],
+      "news_trading_restriction": "5 minutes before/after high-impact news"
+    }
+  }
+}

@@ -1,0 +1,187 @@
+{
+  "strategy_overview": {
+    "name": "New York Open Breakout Strategy – NQ (Nasdaq Futures)",
+    "description": "A systematic breakout strategy designed to capture institutional moves during the New York open session using the NQ/MNQ futures contracts.",
+    "version": "1.0",
+    "last_updated": "2024-01-15"
+  },
+  "market_session": {
+    "instrument": "NQ (NQ / MNQ)",
+    "primary_symbol": "NQ",
+    "micro_symbol": "MNQ",
+    "session": "New York Open",
+    "timezone": "New York (EST / EDT)",
+    "trading_window": "09:30 – 11:00 NY time",
+    "best_days": ["Tuesday", "Wednesday", "Thursday"]
+  },
+  "timeframe_setup": {
+    "execution_timeframe": ["1-minute", "2-minute"],
+    "context_timeframe": "5-minute",
+    "higher_timeframe_bias": ["15-minute", "1-hour"]
+  },
+  "opening_range_definition": {
+    "name": "Opening Range (OR)",
+    "start_time": "09:30",
+    "end_time": "09:45",
+    "duration_minutes": 15,
+    "levels_to_mark": ["OR High", "OR Low", "OR Midpoint (optional)"]
+  },
+  "trade_bias_filter": {
+    "title": "Trade Bias Filter (IMPORTANT)",
+    "rule": "Only trade in the direction of bias.",
+    "bias_options": [
+      {
+        "name": "Price above VWAP",
+        "bias": "bullish",
+        "condition": "Price above Volume Weighted Average Price"
+      },
+      {
+        "name": "Price below VWAP",
+        "bias": "bearish",
+        "condition": "Price below Volume Weighted Average Price"
+      },
+      {
+        "name": "London session trend continuation",
+        "bias": "depends on direction",
+        "condition": "Trend from London session continues into NY open"
+      },
+      {
+        "name": "Higher timeframe structure",
+        "bias": "bullish if HH/HL, bearish if LL/LH",
+        "condition": "Higher highs/higher lows or lower lows/lower highs"
+      },
+      {
+        "name": "Overnight high/low taken",
+        "bias": "momentum direction",
+        "condition": "Overnight high/low broken before NY open"
+      }
+    ],
+    "no_trade_condition": "No bias = no trade"
+  },
+  "entry_rules": {
+    "long_setup": {
+      "conditions": [
+        "Price holds above VWAP",
+        "OR High is not immediately rejected",
+        "1-min candle closes above OR High",
+        "Next candle does NOT close back inside range"
+      ],
+      "entry_options": [
+        {
+          "style": "Aggressive",
+          "method": "Market entry on OR High break"
+        },
+        {
+          "style": "Conservative",
+          "method": "Limit entry on OR High retest"
+        }
+      ]
+    },
+    "short_setup": {
+      "conditions": [
+        "Price holds below VWAP",
+        "OR Low is not immediately rejected",
+        "1-min candle closes below OR Low",
+        "Next candle does NOT close back inside range"
+      ],
+      "entry_options": [
+        {
+          "style": "Aggressive",
+          "method": "Market entry on OR Low break"
+        },
+        {
+          "style": "Conservative",
+          "method": "Limit entry on OR Low retest"
+        }
+      ]
+    }
+  },
+  "stop_loss_rules": {
+    "selection_rule": "Choose ONE and stay consistent",
+    "options": [
+      {
+        "type": "Fixed",
+        "description": "10–20 NQ points (MNQ: same points, smaller size)",
+        "example": "14 points stop"
+      },
+      {
+        "type": "Structure-based",
+        "description": "Below OR Low (for longs) / Above OR High (for shorts)"
+      },
+      {
+        "type": "ATR-based",
+        "description": "0.5 × 5-min ATR"
+      }
+    ],
+    "important_rule": "Hard stop only — no mental stops"
+  },
+  "take_profit_targets": {
+    "conservative_target": {
+      "risk_reward": "1R to 1.5R"
+    },
+    "standard_target": {
+      "risk_reward": "2R",
+      "recommended": true
+    },
+    "runner_model": {
+      "tp1": "1R",
+      "tp2": "2R",
+      "runner_targets": [
+        "Previous day high/low",
+        "Overnight high/low",
+        "09:30 liquidity sweep extension"
+      ]
+    }
+  },
+  "trade_management": {
+    "rules": [
+      "After 1R reached: Move stop to breakeven or trail behind 1-min structure",
+      "If price re-enters the opening range → exit immediately"
+    ]
+  },
+  "risk_management": {
+    "risk_per_trade": "0.25%–1% per trade",
+    "max_trades_per_session": "1–2 trades per session",
+    "daily_loss_limit": "2R",
+    "contingency_rule": "If first trade loses → only trade A+ setup"
+  },
+  "no_trade_conditions": [
+    "Opening range > 60 NQ points (too volatile)",
+    "Major news at or after 10:00",
+    "Price chopping inside OR after breakout",
+    "Fake breakout with strong wick rejection"
+  ],
+  "example_trade": {
+    "direction": "LONG",
+    "levels": {
+      "or_high": 15820,
+      "entry": 15822,
+      "stop": 15808,
+      "stop_points": 14,
+      "tp1": 15836,
+      "tp2": 15850
+    },
+    "timing": {
+      "break_time": "09:47",
+      "entry_time": "09:47"
+    },
+    "risk_calculation": {
+      "risk_per_point": "$20 (NQ) / $2 (MNQ)",
+      "total_risk": "$140 (1 NQ contract)"
+    }
+  },
+  "strategy_rationale": {
+    "why_this_works": [
+      "NQ has high volatility at NY open",
+      "Institutions build positions during OR",
+      "Breakouts often expand 2–3× the range",
+      "VWAP acts as dynamic support/resistance"
+    ]
+  },
+  "optional_enhancements": [
+    "Volume spike confirmation on breakout",
+    "Delta / footprint confirmation",
+    "Only trade when OR aligns with PDH / PDL",
+    "Use MNQ for scaling precision"
+  ]
+}

@@ -1,0 +1,208 @@
+{
+  "strategy_overview": {
+    "name": "New York Open Pullback Strategy – NQ (Nasdaq Futures)",
+    "description": "A pullback strategy designed to capture continuation moves after initial impulse during the New York open session, offering better risk-reward ratios than breakout entries.",
+    "version": "1.0",
+    "last_updated": "2024-01-15"
+  },
+  "market_session": {
+    "instrument": "NQ / MNQ",
+    "primary_symbol": "NQ",
+    "micro_symbol": "MNQ",
+    "session": "New York Open",
+    "timezone": "New York (EST / EDT)",
+    "trading_window": "09:30 – 11:30 NY time",
+    "best_days": ["Tuesday", "Wednesday", "Thursday"]
+  },
+  "timeframe_setup": {
+    "execution_timeframe": "1-minute",
+    "structure_timeframe": "5-minute",
+    "bias_timeframe": ["15-minute", "1-hour"]
+  },
+  "market_conditions": {
+    "title": "Market Conditions (MANDATORY)",
+    "rule": "Trade only if ALL are true:",
+    "conditions": [
+      "Strong impulse move from 09:30–10:00",
+      "Price expands outside the Opening Range",
+      "Price holds above (long) or below (short) VWAP",
+      "No immediate full retrace back into OR"
+    ],
+    "no_trade_condition": "If the move is slow or overlapping → no trade"
+  },
+  "bias_rules": {
+    "general_rule": "Trade only in direction of momentum.",
+    "bullish_bias": {
+      "conditions": [
+        "Higher highs & higher lows on 5m",
+        "VWAP below price",
+        "Overnight high or OR high already broken"
+      ]
+    },
+    "bearish_bias": {
+      "conditions": [
+        "Lower highs & lower lows on 5m",
+        "VWAP above price",
+        "Overnight low or OR low already broken"
+      ]
+    }
+  },
+  "pullback_definition": {
+    "title": "Pullback Definition (THE EDGE)",
+    "requirements": "A valid pullback must:",
+    "criteria": [
+      "Retrace 30–60% of the impulse",
+      "Occur in 3–8 candles (1m)",
+      "Stay outside the Opening Range",
+      "Show decreasing volume"
+    ],
+    "respect_levels": [
+      "VWAP",
+      "OR high/low",
+      "9 EMA or 20 EMA (optional)"
+    ],
+    "exclusion_criteria": "No deep pullbacks back to OR midpoint"
+  },
+  "entry_rules": {
+    "long_pullback": {
+      "setup_conditions": [
+        "Bullish impulse completed",
+        "Price pulls back into support:",
+        "  - VWAP",
+        "  - OR High",
+        "  - 9/20 EMA"
+      ],
+      "pullback_characteristics": "Pullback stalls (small candles, wicks)",
+      "entry_triggers": [
+        "Bullish engulfing candle OR",
+        "Strong close above pullback high"
+      ],
+      "entry_methods": [
+        {
+          "style": "Market",
+          "execution": "Market on trigger candle close"
+        },
+        {
+          "style": "Limit",
+          "execution": "Limit on 50% of trigger candle"
+        }
+      ]
+    },
+    "short_pullback": {
+      "setup_conditions": [
+        "Bearish impulse completed",
+        "Price pulls back into resistance:",
+        "  - VWAP",
+        "  - OR Low",
+        "  - 9/20 EMA"
+      ],
+      "pullback_characteristics": "Pullback stalls",
+      "entry_triggers": [
+        "Bearish engulfing candle OR",
+        "Strong close below pullback low"
+      ]
+    }
+  },
+  "stop_loss_rules": {
+    "selection_rule": "Choose ONE method:",
+    "options": [
+      {
+        "type": "Structure Stop (Preferred)",
+        "description": "Below pullback low (long) / Above pullback high (short)"
+      },
+      {
+        "type": "Fixed Stop",
+        "description": "10–20 NQ points"
+      }
+    ],
+    "important_rule": "Stop must be outside noise, not tight"
+  },
+  "take_profit_targets": {
+    "conservative": {
+      "risk_reward": "1.5R"
+    },
+    "standard": {
+      "risk_reward": "2R – 3R"
+    },
+    "extended_targets": [
+      "Measured move (impulse length)",
+      "Previous day high/low",
+      "Overnight high/low",
+      "VWAP deviation band"
+    ]
+  },
+  "trade_management": {
+    "rules": [
+      "At 1R: Move stop to breakeven",
+      "If price breaks pullback structure strongly: Trail behind 1-min higher lows",
+      "Exit fully if:",
+      "  - Price closes back inside OR",
+      "  - VWAP is lost decisively"
+    ]
+  },
+  "risk_management": {
+    "risk_per_trade": "0.25%–0.75% per trade",
+    "max_trades_per_session": "2 trades per session",
+    "stop_trading_rule": "Stop trading after 2R loss"
+  },
+  "no_trade_conditions": [
+    "Choppy open / overlapping candles",
+    "Pullback > 60% retrace",
+    "Pullback occurs on rising volume",
+    "Major news between 10:00–10:30",
+    "OR range > 60 points"
+  ],
+  "example_trade": {
+    "direction": "LONG",
+    "impulse_move": {
+      "start": 15800,
+      "end": 15860,
+      "length": 60
+    },
+    "pullback_details": {
+      "to_level": "VWAP",
+      "price": 15835,
+      "retrace_percentage": "41.7%"
+    },
+    "entry": {
+      "trigger": "Bullish engulfing at 09:58",
+      "price": 15838
+    },
+    "stop_loss": {
+      "price": 15828,
+      "points": 10
+    },
+    "take_profit": [
+      {
+        "level": "TP1",
+        "price": 15858,
+        "risk_reward": "2R"
+      },
+      {
+        "level": "TP2",
+        "price": 15880,
+        "type": "measured move"
+      }
+    ]
+  },
+  "strategy_rationale": {
+    "why_this_works": [
+      "NQ trends strongly after NY open impulse",
+      "Pullbacks are shallow in real trend days",
+      "VWAP is respected by institutions",
+      "Offers better R:R than breakouts"
+    ]
+  },
+  "optional_enhancements": [
+    "Delta divergence confirmation",
+    "Only trade pullbacks that tap VWAP once",
+    "Add volume profile POC confluence",
+    "Trade MNQ for scaling"
+  ],
+  "performance_metrics": {
+    "expected_win_rate": "55-65%",
+    "average_risk_reward": "1:2 to 1:3",
+    "typical_holding_time": "15-45 minutes",
+    "optimal_market_condition": "Trending NY open with clear impulse"
+  }
+}

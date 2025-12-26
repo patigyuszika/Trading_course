@@ -526,7 +526,7 @@
             <div class="collapse" id="propMenu">
                 <ul class="nav flex-column my-2 submenu-container">
                 <li class="nav-item">
-                    <a class="nav-link text-white submenu-item" onclick="loadPropfirms('evaluation')">Evaluation</a>
+                    <a class="nav-link text-white submenu-item" onclick="loadPropfirms('overview')">Overview</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white submenu-item" onclick="loadPropfirms('rules')">Rules</a>
@@ -1481,6 +1481,10 @@
     
     if (section === 'price-action') {
       loadIntradayLiquidityVolatilityModel();
+    } else if (section === 'breakout') {
+      loadBreakoutStrategy();
+    } else if (section === 'pullback') {
+      loadPullbackStrategy();
     } else {
       const contentMap = {
         'breakout': '<h2>Breakout</h2><p>Kitörések azonosítása és kezelése…</p>',
@@ -1678,17 +1682,926 @@
     }
   }
 
+  // Load Breakout Strategy from JSON
+  async function loadBreakoutStrategy() {
+    const mainContent = document.querySelector('main');
+    
+    try {
+      const response = await fetch('bostrategy.en.json');
+      const data = await response.json();
+      const overview = data.strategy_overview;
+      const marketSession = data.market_session;
+      const timeframeSetup = data.timeframe_setup;
+      const orDef = data.opening_range_definition;
+      const bias = data.trade_bias_filter;
+      const entryRules = data.entry_rules;
+      const stopLoss = data.stop_loss_rules;
+      const tp = data.take_profit_targets;
+      const tradeManagement = data.trade_management;
+      const riskManagement = data.risk_management;
+      const noTrade = data.no_trade_conditions;
+      const example = data.example_trade;
+      const rationale = data.strategy_rationale;
+      const enhancements = data.optional_enhancements;
+      
+      let html = `
+        <h1 class="mb-4">${overview.name}</h1>
+        
+        <div class="card mb-4" style="background: linear-gradient(135deg, #2d4a5a 0%, #1a2d3d 100%); border: 2px solid #4a7a9f; color: white;">
+          <div class="card-body">
+            <h5 class="card-title" style="color: #a8c5ff; font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Strategy Overview</h5>
+            <p style="color: #d4e3f7; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">${overview.description}</p>
+            
+            <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 5px; border-left: 4px solid #a8c5ff; margin-bottom: 1rem;">
+              <p style="color: #d4e3f7; font-size: 0.9rem; margin: 0;"><strong style="color: #a8c5ff;">Version:</strong> ${overview.version}</p>
+            </div>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Market Session</h3>
+        <div class="card mb-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80;">
+          <div class="card-body">
+            <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Instrument:</strong> ${marketSession.instrument}</p>
+            <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Session:</strong> ${marketSession.session}</p>
+            <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Trading Window:</strong> ${marketSession.trading_window}</p>
+            <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Best Days:</strong> ${marketSession.best_days.join(', ')}</p>
+            <p style="color: #d4e3f7; margin: 0;"><strong style="color: #a8c5ff;">Timezone:</strong> ${marketSession.timezone}</p>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Timeframe Setup</h3>
+        <div class="card mb-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80;">
+          <div class="card-body">
+            <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Execution Timeframe:</strong> ${timeframeSetup.execution_timeframe.join(', ')}</p>
+            <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Context Timeframe:</strong> ${timeframeSetup.context_timeframe}</p>
+            <p style="color: #d4e3f7; margin: 0;"><strong style="color: #a8c5ff;">Higher Timeframe Bias:</strong> ${timeframeSetup.higher_timeframe_bias.join(', ')}</p>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Opening Range Definition</h3>
+        <div class="card mb-4" style="background: linear-gradient(135deg, #2d5a3d 0%, #1a3d2a 100%); border: 2px solid #4a9f6e;">
+          <div class="card-body">
+            <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8d5a8;">Name:</strong> ${orDef.name}</p>
+            <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8d5a8;">Duration:</strong> ${orDef.start_time} - ${orDef.end_time} (${orDef.duration_minutes} minutes)</p>
+            <p style="color: #d4e3f7; margin: 0;"><strong style="color: #a8d5a8;">Levels to Mark:</strong> ${orDef.levels_to_mark.join(', ')}</p>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Trade Bias Filter</h3>
+        <p style="color: #d4e3f7; margin-bottom: 1rem;"><strong style="color: #a8c5ff;">${bias.title}</strong> - ${bias.rule}</p>
+        <div class="row mb-4">
+      `;
+      
+      bias.bias_options.forEach((option) => {
+        const biasColor = option.bias === 'bullish' ? '#a8d5a8' : option.bias === 'bearish' ? '#d5a8a8' : '#a8c5ff';
+        html += `
+          <div class="col-12 col-md-6 mb-3">
+            <div class="card h-100" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border-left: 4px solid ${biasColor};">
+              <div class="card-body">
+                <h5 style="color: ${biasColor}; font-weight: 700; margin-bottom: 0.5rem;">${option.name}</h5>
+                <p style="color: #d4e3f7; font-size: 0.9rem; margin: 0;">${option.condition}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += `
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Entry Rules</h3>
+        <div class="row mb-4">
+          <div class="col-12 col-lg-6 mb-3">
+            <div class="card h-100" style="background: linear-gradient(135deg, #2d5a3d 0%, #1a3d2a 100%); border: 2px solid #4a9f6e;">
+              <div class="card-body">
+                <h5 style="color: #a8d5a8; font-weight: 700; margin-bottom: 1rem;">LONG Setup</h5>
+      `;
+      
+      entryRules.long_setup.conditions.forEach((cond) => {
+        html += `<p style="color: #d4e3f7; font-size: 0.9rem; margin-bottom: 0.5rem;">✓ ${cond}</p>`;
+      });
+      
+      html += `
+                <div style="background: rgba(255,255,255,0.05); padding: 0.75rem; margin-top: 1rem; border-radius: 4px; border-top: 2px solid #a8d5a8;">
+                  <p style="color: #a8d5a8; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.5rem;">Entry Options:</p>
+      `;
+      
+      entryRules.long_setup.entry_options.forEach((opt) => {
+        html += `<p style="color: #d4e3f7; font-size: 0.85rem; margin-bottom: 0.3rem;"><strong>${opt.style}:</strong> ${opt.method}</p>`;
+      });
+      
+      html += `
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-12 col-lg-6 mb-3">
+            <div class="card h-100" style="background: linear-gradient(135deg, #5a2d2d 0%, #3d1a1a 100%); border: 2px solid #9f4a4a;">
+              <div class="card-body">
+                <h5 style="color: #d5a8a8; font-weight: 700; margin-bottom: 1rem;">SHORT Setup</h5>
+      `;
+      
+      entryRules.short_setup.conditions.forEach((cond) => {
+        html += `<p style="color: #d4e3f7; font-size: 0.9rem; margin-bottom: 0.5rem;">✓ ${cond}</p>`;
+      });
+      
+      html += `
+                <div style="background: rgba(255,255,255,0.05); padding: 0.75rem; margin-top: 1rem; border-radius: 4px; border-top: 2px solid #d5a8a8;">
+                  <p style="color: #d5a8a8; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.5rem;">Entry Options:</p>
+      `;
+      
+      entryRules.short_setup.entry_options.forEach((opt) => {
+        html += `<p style="color: #d4e3f7; font-size: 0.85rem; margin-bottom: 0.3rem;"><strong>${opt.style}:</strong> ${opt.method}</p>`;
+      });
+      
+      html += `
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Stop Loss Rules</h3>
+        <p style="color: #d4e3f7; margin-bottom: 1rem;"><strong style="color: #a8c5ff;">${stopLoss.important_rule}</strong></p>
+        <div class="row mb-4">
+      `;
+      
+      stopLoss.options.forEach((option) => {
+        html += `
+          <div class="col-12 col-md-6 col-lg-4 mb-3">
+            <div class="card h-100" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80;">
+              <div class="card-body">
+                <h5 style="color: #a8c5ff; font-weight: 700; margin-bottom: 0.5rem;">${option.type}</h5>
+                <p style="color: #d4e3f7; font-size: 0.9rem; margin-bottom: 0.5rem;">${option.description}</p>
+                ${option.example ? `<p style="color: #a8d5a8; font-size: 0.85rem; margin: 0;"><em>${option.example}</em></p>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += `
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Take Profit Targets</h3>
+        <div class="row mb-4">
+          <div class="col-12 col-md-6 col-lg-4 mb-3">
+            <div class="card h-100" style="background: linear-gradient(135deg, #2d5a3d 0%, #1a3d2a 100%); border: 2px solid #4a9f6e;">
+              <div class="card-body">
+                <h5 style="color: #a8d5a8; font-weight: 700; margin-bottom: 0.5rem;">Conservative</h5>
+                <p style="color: #d4e3f7; font-size: 0.9rem; margin: 0;"><strong>Risk/Reward:</strong> ${tp.conservative_target.risk_reward}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-12 col-md-6 col-lg-4 mb-3">
+            <div class="card h-100" style="background: linear-gradient(135deg, #2d4a5a 0%, #1a2d3d 100%); border: 2px solid #4a7a9f;">
+              <div class="card-body">
+                <h5 style="color: #a8c5ff; font-weight: 700; margin-bottom: 0.5rem;">Standard (Recommended)</h5>
+                <p style="color: #d4e3f7; font-size: 0.9rem; margin: 0;"><strong>Risk/Reward:</strong> ${tp.standard_target.risk_reward}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-12 col-md-6 col-lg-4 mb-3">
+            <div class="card h-100" style="background: linear-gradient(135deg, #5a4a2d 0%, #3d2d1a 100%); border: 2px solid #9f7a4a;">
+              <div class="card-body">
+                <h5 style="color: #d5c5a8; font-weight: 700; margin-bottom: 0.5rem;">Runner Model</h5>
+                <p style="color: #d4e3f7; font-size: 0.9rem; margin-bottom: 0.3rem;"><strong>TP1:</strong> ${tp.runner_model.tp1}</p>
+                <p style="color: #d4e3f7; font-size: 0.9rem; margin: 0;"><strong>TP2:</strong> ${tp.runner_model.tp2}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Trade Management</h3>
+        <div class="card mb-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80;">
+          <div class="card-body">
+      `;
+      
+      tradeManagement.rules.forEach((rule) => {
+        html += `<p style="color: #d4e3f7; font-size: 0.9rem; margin-bottom: 0.5rem;">• ${rule}</p>`;
+      });
+      
+      html += `
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Risk Management</h3>
+        <div class="card mb-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80;">
+          <div class="card-body">
+            <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Risk per Trade:</strong> ${riskManagement.risk_per_trade}</p>
+            <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Max Trades per Session:</strong> ${riskManagement.max_trades_per_session}</p>
+            <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Daily Loss Limit:</strong> ${riskManagement.daily_loss_limit}</p>
+            <p style="color: #d4e3f7; margin: 0;"><strong style="color: #a8c5ff;">Contingency Rule:</strong> ${riskManagement.contingency_rule}</p>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">No Trade Conditions</h3>
+        <div class="card mb-4" style="background: linear-gradient(135deg, #5a2d2d 0%, #3d1a1a 100%); border-left: 4px solid #d5a8a8;">
+          <div class="card-body">
+      `;
+      
+      noTrade.forEach((condition) => {
+        html += `<p style="color: #d4e3f7; font-size: 0.9rem; margin-bottom: 0.5rem;">✗ ${condition}</p>`;
+      });
+      
+      html += `
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Example Trade</h3>
+        <div class="card mb-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80;">
+          <div class="card-body">
+            <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 5px; margin-bottom: 1rem;">
+              <p style="color: #a8c5ff; font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>Direction:</strong> ${example.direction}</p>
+              <p style="color: #a8d5a8; font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>OR High:</strong> ${example.levels.or_high}</p>
+              <p style="color: #a8c5ff; font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>Entry:</strong> ${example.levels.entry}</p>
+              <p style="color: #d5a8a8; font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>Stop Loss:</strong> ${example.levels.stop} (${example.levels.stop_points} points)</p>
+              <p style="color: #a8d5a8; font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>TP1:</strong> ${example.levels.tp1}</p>
+              <p style="color: #a8d5a8; font-size: 0.9rem; margin: 0;"><strong>TP2:</strong> ${example.levels.tp2}</p>
+            </div>
+            <p style="color: #d4e3f7; font-size: 0.9rem; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Break Time:</strong> ${example.timing.break_time}</p>
+            <p style="color: #d4e3f7; font-size: 0.9rem; margin: 0;"><strong style="color: #a8c5ff;">Risk per Point:</strong> ${example.risk_calculation.risk_per_point} | <strong>Total Risk:</strong> ${example.risk_calculation.total_risk}</p>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Strategy Rationale</h3>
+        <div class="card mb-4" style="background: linear-gradient(135deg, #2d5a3d 0%, #1a3d2a 100%); border: 2px solid #4a9f6e;">
+          <div class="card-body">
+      `;
+      
+      rationale.why_this_works.forEach((reason) => {
+        html += `<p style="color: #d4e3f7; font-size: 0.9rem; margin-bottom: 0.5rem;">✓ ${reason}</p>`;
+      });
+      
+      html += `
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Optional Enhancements</h3>
+        <div class="card mb-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80;">
+          <div class="card-body">
+      `;
+      
+      enhancements.forEach((enhancement) => {
+        html += `<p style="color: #d4e3f7; font-size: 0.9rem; margin-bottom: 0.5rem;">+ ${enhancement}</p>`;
+      });
+      
+      html += `
+          </div>
+        </div>
+      `;
+      
+      mainContent.innerHTML = html;
+    } catch (error) {
+      mainContent.innerHTML = '<p class="text-danger">Error loading Breakout Strategy. Please check if bostrategy.en.json exists.</p>';
+      console.error('Error loading breakout strategy:', error);
+    }
+  }
+
+  // Load Pullback Strategy from JSON
+  async function loadPullbackStrategy() {
+    const mainContent = document.querySelector('main');
+    
+    try {
+      const response = await fetch('pullback.en.json');
+      const data = await response.json();
+      const overview = data.strategy_overview;
+      const marketSession = data.market_session;
+      const timeframeSetup = data.timeframe_setup;
+      const marketConditions = data.market_conditions;
+      const biasRules = data.bias_rules;
+      const pullbackDef = data.pullback_definition;
+      const entryRules = data.entry_rules;
+      const stopLoss = data.stop_loss_rules;
+      const tp = data.take_profit_targets;
+      const tradeManagement = data.trade_management;
+      const riskManagement = data.risk_management;
+      const noTrade = data.no_trade_conditions;
+      const example = data.example_trade;
+      const rationale = data.strategy_rationale;
+      const enhancements = data.optional_enhancements;
+      const metrics = data.performance_metrics;
+      
+      let html = `
+        <h1 class="mb-4">${overview.name}</h1>
+        
+        <div class="card mb-4" style="background: linear-gradient(135deg, #2d4a5a 0%, #1a2d3d 100%); border: 2px solid #4a7a9f; color: white;">
+          <div class="card-body">
+            <h5 class="card-title" style="color: #a8c5ff; font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Strategy Overview</h5>
+            <p style="color: #d4e3f7; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">${overview.description}</p>
+            
+            <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 5px; border-left: 4px solid #a8c5ff; margin-bottom: 1rem;">
+              <p style="color: #d4e3f7; font-size: 0.9rem; margin: 0;"><strong style="color: #a8c5ff;">Version:</strong> ${overview.version}</p>
+            </div>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Market Session</h3>
+        <div class="card mb-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80;">
+          <div class="card-body">
+            <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Instrument:</strong> ${marketSession.instrument}</p>
+            <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Session:</strong> ${marketSession.session}</p>
+            <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Trading Window:</strong> ${marketSession.trading_window}</p>
+            <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Best Days:</strong> ${marketSession.best_days.join(', ')}</p>
+            <p style="color: #d4e3f7; margin: 0;"><strong style="color: #a8c5ff;">Timezone:</strong> ${marketSession.timezone}</p>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Timeframe Setup</h3>
+        <div class="card mb-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80;">
+          <div class="card-body">
+            <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Execution Timeframe:</strong> ${timeframeSetup.execution_timeframe}</p>
+            <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Structure Timeframe:</strong> ${timeframeSetup.structure_timeframe}</p>
+            <p style="color: #d4e3f7; margin: 0;"><strong style="color: #a8c5ff;">Bias Timeframe:</strong> ${Array.isArray(timeframeSetup.bias_timeframe) ? timeframeSetup.bias_timeframe.join(', ') : timeframeSetup.bias_timeframe}</p>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Market Conditions (MANDATORY)</h3>
+        <p style="color: #d4e3f7; margin-bottom: 1rem;"><strong style="color: #a8c5ff;">${marketConditions.title}</strong> - ${marketConditions.rule}</p>
+        <div class="card mb-4" style="background: linear-gradient(135deg, #2d5a3d 0%, #1a3d2a 100%); border: 2px solid #4a9f6e;">
+          <div class="card-body">
+      `;
+      
+      marketConditions.conditions.forEach((cond) => {
+        html += `<p style="color: #d4e3f7; font-size: 0.9rem; margin-bottom: 0.5rem;">✓ ${cond}</p>`;
+      });
+      
+      html += `
+            <p style="color: #d5a8a8; font-size: 0.9rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(213,168,168,0.2);"><strong>⚠ No Trade:</strong> ${marketConditions.no_trade_condition}</p>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Bias Rules</h3>
+        <p style="color: #d4e3f7; margin-bottom: 1.5rem;"><strong style="color: #a8c5ff;">${biasRules.general_rule}</strong></p>
+        <div class="row mb-4">
+          <div class="col-12 col-lg-6 mb-3">
+            <div class="card h-100" style="background: linear-gradient(135deg, #2d5a3d 0%, #1a3d2a 100%); border: 2px solid #4a9f6e;">
+              <div class="card-body">
+                <h5 style="color: #a8d5a8; font-weight: 700; margin-bottom: 1rem;">Bullish Bias</h5>
+      `;
+      
+      biasRules.bullish_bias.conditions.forEach((cond) => {
+        html += `<p style="color: #d4e3f7; font-size: 0.9rem; margin-bottom: 0.5rem;">✓ ${cond}</p>`;
+      });
+      
+      html += `
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-12 col-lg-6 mb-3">
+            <div class="card h-100" style="background: linear-gradient(135deg, #5a2d2d 0%, #3d1a1a 100%); border: 2px solid #9f4a4a;">
+              <div class="card-body">
+                <h5 style="color: #d5a8a8; font-weight: 700; margin-bottom: 1rem;">Bearish Bias</h5>
+      `;
+      
+      biasRules.bearish_bias.conditions.forEach((cond) => {
+        html += `<p style="color: #d4e3f7; font-size: 0.9rem; margin-bottom: 0.5rem;">✓ ${cond}</p>`;
+      });
+      
+      html += `
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Pullback Definition (THE EDGE)</h3>
+        <p style="color: #d4e3f7; margin-bottom: 1rem;"><strong style="color: #a8c5ff;">${pullbackDef.title}</strong> - ${pullbackDef.requirements}</p>
+        <div class="row mb-4">
+          <div class="col-12 col-lg-6 mb-3">
+            <div class="card h-100" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border-left: 4px solid #a8c5ff;">
+              <div class="card-body">
+                <h5 style="color: #a8c5ff; font-weight: 700; margin-bottom: 1rem;">Criteria</h5>
+      `;
+      
+      pullbackDef.criteria.forEach((crit) => {
+        html += `<p style="color: #d4e3f7; font-size: 0.9rem; margin-bottom: 0.5rem;">✓ ${crit}</p>`;
+      });
+      
+      html += `
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-12 col-lg-6 mb-3">
+            <div class="card h-100" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border-left: 4px solid #a8d5a8;">
+              <div class="card-body">
+                <h5 style="color: #a8d5a8; font-weight: 700; margin-bottom: 1rem;">Respect Levels</h5>
+      `;
+      
+      pullbackDef.respect_levels.forEach((level) => {
+        html += `<p style="color: #d4e3f7; font-size: 0.9rem; margin-bottom: 0.5rem;">• ${level}</p>`;
+      });
+      
+      html += `
+                <div style="background: rgba(255,255,255,0.05); padding: 0.75rem; margin-top: 1rem; border-radius: 4px; border-top: 1px solid rgba(168,213,168,0.3);">
+                  <p style="color: #d5a8a8; font-size: 0.85rem; margin: 0;"><strong>Exclusion:</strong> ${pullbackDef.exclusion_criteria}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Entry Rules</h3>
+        <div class="row mb-4">
+          <div class="col-12 col-lg-6 mb-3">
+            <div class="card h-100" style="background: linear-gradient(135deg, #2d5a3d 0%, #1a3d2a 100%); border: 2px solid #4a9f6e;">
+              <div class="card-body">
+                <h5 style="color: #a8d5a8; font-weight: 700; margin-bottom: 1rem;">LONG Pullback</h5>
+                <p style="color: #a8c5ff; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.75rem;">Setup Conditions:</p>
+      `;
+      
+      entryRules.long_pullback.setup_conditions.forEach((cond) => {
+        html += `<p style="color: #d4e3f7; font-size: 0.85rem; margin-bottom: 0.3rem;">✓ ${cond}</p>`;
+      });
+      
+      html += `
+                <div style="background: rgba(255,255,255,0.05); padding: 0.75rem; margin-top: 0.75rem; border-radius: 4px;">
+                  <p style="color: #a8c5ff; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem;">Entry Triggers:</p>
+      `;
+      
+      entryRules.long_pullback.entry_triggers.forEach((trig) => {
+        html += `<p style="color: #d4e3f7; font-size: 0.85rem; margin-bottom: 0.3rem;">→ ${trig}</p>`;
+      });
+      
+      html += `
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-12 col-lg-6 mb-3">
+            <div class="card h-100" style="background: linear-gradient(135deg, #5a2d2d 0%, #3d1a1a 100%); border: 2px solid #9f4a4a;">
+              <div class="card-body">
+                <h5 style="color: #d5a8a8; font-weight: 700; margin-bottom: 1rem;">SHORT Pullback</h5>
+                <p style="color: #d5c5a8; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.75rem;">Setup Conditions:</p>
+      `;
+      
+      entryRules.short_pullback.setup_conditions.forEach((cond) => {
+        html += `<p style="color: #d4e3f7; font-size: 0.85rem; margin-bottom: 0.3rem;">✓ ${cond}</p>`;
+      });
+      
+      html += `
+                <div style="background: rgba(255,255,255,0.05); padding: 0.75rem; margin-top: 0.75rem; border-radius: 4px;">
+                  <p style="color: #d5c5a8; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem;">Entry Triggers:</p>
+      `;
+      
+      entryRules.short_pullback.entry_triggers.forEach((trig) => {
+        html += `<p style="color: #d4e3f7; font-size: 0.85rem; margin-bottom: 0.3rem;">→ ${trig}</p>`;
+      });
+      
+      html += `
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Stop Loss Rules</h3>
+        <p style="color: #d4e3f7; margin-bottom: 1rem;"><strong style="color: #a8c5ff;">${stopLoss.important_rule}</strong></p>
+        <div class="row mb-4">
+      `;
+      
+      stopLoss.options.forEach((option) => {
+        html += `
+          <div class="col-12 col-md-6 mb-3">
+            <div class="card h-100" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80;">
+              <div class="card-body">
+                <h5 style="color: #a8c5ff; font-weight: 700; margin-bottom: 0.5rem;">${option.type}</h5>
+                <p style="color: #d4e3f7; font-size: 0.9rem; margin: 0;">${option.description}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += `
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Take Profit Targets</h3>
+        <div class="row mb-4">
+          <div class="col-12 col-md-6 col-lg-4 mb-3">
+            <div class="card h-100" style="background: linear-gradient(135deg, #2d5a3d 0%, #1a3d2a 100%); border: 2px solid #4a9f6e;">
+              <div class="card-body">
+                <h5 style="color: #a8d5a8; font-weight: 700; margin-bottom: 0.5rem;">Conservative</h5>
+                <p style="color: #d4e3f7; font-size: 0.9rem; margin: 0;"><strong>Risk/Reward:</strong> ${tp.conservative.risk_reward}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-12 col-md-6 col-lg-4 mb-3">
+            <div class="card h-100" style="background: linear-gradient(135deg, #2d4a5a 0%, #1a2d3d 100%); border: 2px solid #4a7a9f;">
+              <div class="card-body">
+                <h5 style="color: #a8c5ff; font-weight: 700; margin-bottom: 0.5rem;">Standard</h5>
+                <p style="color: #d4e3f7; font-size: 0.9rem; margin: 0;"><strong>Risk/Reward:</strong> ${tp.standard.risk_reward}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-12 col-md-6 col-lg-4 mb-3">
+            <div class="card h-100" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border-left: 4px solid #a8d5a8;">
+              <div class="card-body">
+                <h5 style="color: #a8d5a8; font-weight: 700; margin-bottom: 0.75rem;">Extended Targets</h5>
+      `;
+      
+      tp.extended_targets.forEach((target) => {
+        html += `<p style="color: #d4e3f7; font-size: 0.85rem; margin-bottom: 0.3rem;">• ${target}</p>`;
+      });
+      
+      html += `
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Trade Management</h3>
+        <div class="card mb-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80;">
+          <div class="card-body">
+      `;
+      
+      tradeManagement.rules.forEach((rule) => {
+        html += `<p style="color: #d4e3f7; font-size: 0.9rem; margin-bottom: 0.5rem;">• ${rule}</p>`;
+      });
+      
+      html += `
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Risk Management</h3>
+        <div class="card mb-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80;">
+          <div class="card-body">
+            <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Risk per Trade:</strong> ${riskManagement.risk_per_trade}</p>
+            <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Max Trades per Session:</strong> ${riskManagement.max_trades_per_session}</p>
+            <p style="color: #d4e3f7; margin: 0;"><strong style="color: #a8c5ff;">Stop Trading Rule:</strong> ${riskManagement.stop_trading_rule}</p>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">No Trade Conditions</h3>
+        <div class="card mb-4" style="background: linear-gradient(135deg, #5a2d2d 0%, #3d1a1a 100%); border-left: 4px solid #d5a8a8;">
+          <div class="card-body">
+      `;
+      
+      noTrade.forEach((condition) => {
+        html += `<p style="color: #d4e3f7; font-size: 0.9rem; margin-bottom: 0.5rem;">✗ ${condition}</p>`;
+      });
+      
+      html += `
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Example Trade</h3>
+        <div class="card mb-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80;">
+          <div class="card-body">
+            <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 5px; margin-bottom: 1rem;">
+              <p style="color: #a8c5ff; font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>Direction:</strong> ${example.direction}</p>
+              <p style="color: #a8d5a8; font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>Impulse Move:</strong> ${example.impulse_move.start} → ${example.impulse_move.end} (${example.impulse_move.length} points)</p>
+              <p style="color: #a8d5a8; font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>Pullback Level:</strong> ${example.pullback_details.to_level} @ ${example.pullback_details.price} (${example.pullback_details.retrace_percentage}% retrace)</p>
+              <p style="color: #a8c5ff; font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>Entry Trigger:</strong> ${example.entry.trigger} @ ${example.entry.price}</p>
+              <p style="color: #d5a8a8; font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>Stop Loss:</strong> ${example.stop_loss.price} (${example.stop_loss.points} points)</p>
+      `;
+      
+      example.take_profit.forEach((tp_item) => {
+        html += `<p style="color: #a8d5a8; font-size: 0.9rem; margin-bottom: 0.3rem;"><strong>${tp_item.level}:</strong> ${tp_item.price} (${tp_item.risk_reward || tp_item.type})</p>`;
+      });
+      
+      html += `
+            </div>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Strategy Rationale</h3>
+        <div class="card mb-4" style="background: linear-gradient(135deg, #2d5a3d 0%, #1a3d2a 100%); border: 2px solid #4a9f6e;">
+          <div class="card-body">
+      `;
+      
+      rationale.why_this_works.forEach((reason) => {
+        html += `<p style="color: #d4e3f7; font-size: 0.9rem; margin-bottom: 0.5rem;">✓ ${reason}</p>`;
+      });
+      
+      html += `
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Performance Metrics</h3>
+        <div class="row mb-4">
+          <div class="col-12 col-md-4 mb-3">
+            <div class="card h-100" style="background: linear-gradient(135deg, #2d5a3d 0%, #1a3d2a 100%); border: 2px solid #4a9f6e;">
+              <div class="card-body">
+                <h5 style="color: #a8d5a8; font-weight: 700; margin-bottom: 0.5rem;">Win Rate</h5>
+                <p style="color: #d4e3f7; font-size: 0.9rem; margin: 0;">${metrics.expected_win_rate}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-12 col-md-4 mb-3">
+            <div class="card h-100" style="background: linear-gradient(135deg, #2d4a5a 0%, #1a2d3d 100%); border: 2px solid #4a7a9f;">
+              <div class="card-body">
+                <h5 style="color: #a8c5ff; font-weight: 700; margin-bottom: 0.5rem;">Risk/Reward</h5>
+                <p style="color: #d4e3f7; font-size: 0.9rem; margin: 0;">${metrics.average_risk_reward}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-12 col-md-4 mb-3">
+            <div class="card h-100" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80;">
+              <div class="card-body">
+                <h5 style="color: #a8c5ff; font-weight: 700; margin-bottom: 0.5rem;">Holding Time</h5>
+                <p style="color: #d4e3f7; font-size: 0.9rem; margin: 0;">${metrics.typical_holding_time}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <h3 style="color: white; margin-top: 2rem; margin-bottom: 1.5rem;">Optional Enhancements</h3>
+        <div class="card mb-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border: 1px solid #3d5a80;">
+          <div class="card-body">
+      `;
+      
+      enhancements.forEach((enhancement) => {
+        html += `<p style="color: #d4e3f7; font-size: 0.9rem; margin-bottom: 0.5rem;">+ ${enhancement}</p>`;
+      });
+      
+      html += `
+          </div>
+        </div>
+      `;
+      
+      mainContent.innerHTML = html;
+    } catch (error) {
+      mainContent.innerHTML = '<p class="text-danger">Error loading Pullback Strategy. Please check if pullback.en.json exists.</p>';
+      console.error('Error loading pullback strategy:', error);
+    }
+  }
+
   function loadPropfirms(section = '') {
     closeSidebarOnMobile();
     scrollToTop();
     const mainContent = document.querySelector('main');
     const title = 'Propfirms';
-    const contentMap = {
-      'evaluation': '<h2>Evaluation</h2><p>Értékelési szakasz felépítése…</p>',
-      'rules': '<h2>Rules</h2><p>Gyakori szabályok és buktatók…</p>',
-      'tips': '<h2>Tips</h2><p>Tippek a sikeres teljesítéshez…</p>'
-    };
-    mainContent.innerHTML = contentMap[section] || `<h2>${title}</h2><p>Válassz egy témát a lenyílóból.</p>`;
+    
+    if (section === 'overview') {
+      loadPropfirmsOverview();
+    } else {
+      const contentMap = {
+        'overview': '<h2>Overview</h2><p>Értékelési szakasz felépítése…</p>',
+        'rules': '<h2>Rules</h2><p>Gyakori szabályok és buktatók…</p>',
+        'tips': '<h2>Tips</h2><p>Tippek a sikeres teljesítéshez…</p>'
+      };
+      mainContent.innerHTML = contentMap[section] || `<h2>${title}</h2><p>Válassz egy témát a lenyílóból.</p>`;
+    }
+  }
+
+  // Load Propfirms Overview with expandable cards
+  async function loadPropfirmsOverview() {
+    const mainContent = document.querySelector('main');
+    
+    try {
+      const response = await fetch('acc.en.json');
+      const data = await response.json();
+      const overview = data.firm_overview;
+      const instruments = data.instruments_and_assets;
+      const leverage = data.leverage;
+      const commissions = data.commissions;
+      const consistency = data.consistency_rules;
+      const firmRules = data.firm_rules;
+      const maxLotSizes = data.maximum_lot_sizes;
+      const payoutPolicy = data.payout_policy;
+      const accountTypes = data.account_types_summary;
+      
+      let html = `
+        <h1 class="mb-4">Trading Firms</h1>
+        <p class="text-muted mb-4">Explore trading firms and their details. Click to expand.</p>
+        
+        <div class="row" id="firmCardsContainer">
+      `;
+      
+      // Create expandable card for the firm
+      html += `
+        <div class="col-12 mb-4">
+          <div class="card firm-card" style="background: linear-gradient(135deg, #2d4a5a 0%, #1a2d3d 100%); border: 2px solid #4a7a9f; cursor: pointer; overflow: hidden;">
+            <div class="card-header firm-card-header" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border-bottom: 2px solid #4a7a9f; padding: 1.5rem; display: flex; align-items: center; gap: 1rem; cursor: pointer;" onclick="toggleFirmCard(this)">
+              <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #a8c5ff 0%, #4a7a9f 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 1.2rem;">
+                ACG
+              </div>
+              <div style="flex: 1;">
+                <h5 style="color: #a8c5ff; margin: 0; font-weight: 700;">${overview.name}</h5>
+                <p style="color: #d4e3f7; margin: 0; font-size: 0.9rem;">${overview.broker}</p>
+              </div>
+              <i class="bi bi-chevron-down" style="color: #a8c5ff; font-size: 1.5rem; transition: transform 0.3s ease;"></i>
+            </div>
+            
+            <div class="firm-card-content" style="max-height: 0; overflow: hidden; transition: max-height 0.4s ease;">
+              <div class="card-body" style="padding: 1.5rem;">
+                <!-- Firm Overview -->
+                <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 5px; margin-bottom: 1.5rem;">
+                  <h6 style="color: #a8c5ff; font-weight: 700; margin-bottom: 1rem;">Trading Details</h6>
+                  <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Platforms:</strong> ${overview.platforms.join(', ')}</p>
+                  <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Payment Methods:</strong> ${overview.payment_methods.join(', ')}</p>
+                  <p style="color: #d4e3f7; margin: 0;"><strong style="color: #a8c5ff;">Payout Methods:</strong> ${overview.payout_methods.join(', ')}</p>
+                </div>
+                
+                <!-- Instruments and Assets -->
+                <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 5px; margin-bottom: 1.5rem;">
+                  <h6 style="color: #a8c5ff; font-weight: 700; margin-bottom: 1rem;">Instruments & Assets</h6>
+                  <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Type:</strong> ${instruments.instrument_type}</p>
+                  <p style="color: #d4e3f7; margin: 0;"><strong style="color: #a8c5ff;">Assets:</strong> ${instruments.assets.join(', ')}</p>
+                </div>
+                
+                <!-- Leverage Table -->
+                <div style="margin-bottom: 1.5rem;">
+                  <h6 style="color: #a8c5ff; font-weight: 700; margin-bottom: 1rem;">Leverage by Asset Class</h6>
+                  <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; background: rgba(255,255,255,0.02);">
+                      <thead>
+                        <tr style="border-bottom: 2px solid #4a7a9f;">
+                          <th style="padding: 0.75rem; text-align: left; color: #a8c5ff; font-weight: 700; border-right: 1px solid rgba(74,122,159,0.3);">Asset</th>
+                          <th style="padding: 0.75rem; text-align: center; color: #a8c5ff; font-weight: 700; border-right: 1px solid rgba(74,122,159,0.3);">Instant</th>
+                          <th style="padding: 0.75rem; text-align: center; color: #a8c5ff; font-weight: 700; border-right: 1px solid rgba(74,122,159,0.3);">1 Step</th>
+                          <th style="padding: 0.75rem; text-align: center; color: #a8c5ff; font-weight: 700; border-right: 1px solid rgba(74,122,159,0.3);">2 Steps</th>
+                          <th style="padding: 0.75rem; text-align: center; color: #a8c5ff; font-weight: 700;">3 Steps</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+      `;
+      
+      leverage.assets.forEach((asset, idx) => {
+        html += `
+                        <tr style="border-bottom: 1px solid rgba(74,122,159,0.2); ${idx % 2 === 0 ? 'background: rgba(74,122,159,0.05);' : ''}">
+                          <td style="padding: 0.75rem; color: #d4e3f7; border-right: 1px solid rgba(74,122,159,0.3); font-weight: 600;">${asset.asset}</td>
+                          <td style="padding: 0.75rem; text-align: center; color: #d4e3f7; border-right: 1px solid rgba(74,122,159,0.3);">${asset.instant}</td>
+                          <td style="padding: 0.75rem; text-align: center; color: #a8d5a8; border-right: 1px solid rgba(74,122,159,0.3); font-weight: 600;">${asset['1_step']}</td>
+                          <td style="padding: 0.75rem; text-align: center; color: #a8c5ff; border-right: 1px solid rgba(74,122,159,0.3); font-weight: 600;">${asset['2_steps']}</td>
+                          <td style="padding: 0.75rem; text-align: center; color: #d5a8a8; font-weight: 600;">${asset['3_steps']}</td>
+                        </tr>
+        `;
+      });
+      
+      html += `
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                
+                <!-- Commissions -->
+                <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 5px; margin-bottom: 1.5rem;">
+                  <h6 style="color: #a8c5ff; font-weight: 700; margin-bottom: 1rem;">Commissions</h6>
+                  <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">FX Raw:</strong> ${commissions.fx.raw} | <strong>Standard:</strong> ${commissions.fx.standard}</p>
+                  <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Metals Raw:</strong> ${commissions.metals.raw} | <strong>Standard:</strong> ${commissions.metals.standard}</p>
+                  <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Indices:</strong> ${commissions.indices}</p>
+                  <p style="color: #d4e3f7; margin: 0;"><strong style="color: #a8c5ff;">Energy:</strong> ${commissions.energy}</p>
+                </div>
+                
+                <!-- Consistency Rules -->
+                <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 5px; margin-bottom: 1.5rem;">
+                  <h6 style="color: #a8c5ff; font-weight: 700; margin-bottom: 1rem;">Consistency Rules</h6>
+                  <p style="color: #d4e3f7; margin-bottom: 0.5rem;"><strong style="color: #a8c5ff;">Consistency Rule:</strong> ${consistency.on_demand_payout_requirements.consistency_rule}</p>
+                  <p style="color: #d4e3f7; margin: 0;"><strong style="color: #a8c5ff;">Minimum Gross Profit:</strong> ${consistency.on_demand_payout_requirements.minimum_gross_profit}</p>
+                </div>
+                
+                <!-- Firm Rules -->
+                <div style="margin-bottom: 1.5rem;">
+                  <h6 style="color: #a8c5ff; font-weight: 700; margin-bottom: 1rem;">Firm Rules</h6>
+                  <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 5px; margin-bottom: 0.75rem;">
+                    <p style="color: #d5a8a8; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;"><strong>Inactivity Rule:</strong> ${firmRules.inactivity_rule.description}</p>
+                    <p style="color: #d4e3f7; font-size: 0.85rem; margin: 0;">⚠ ${firmRules.inactivity_rule.consequences[0]}</p>
+                  </div>
+                  <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 5px; margin-bottom: 0.75rem;">
+                    <p style="color: #d5a8a8; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;"><strong>All or Nothing:</strong> ${firmRules.all_or_nothing.description}</p>
+                  </div>
+                  <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 5px; margin-bottom: 0.75rem;">
+                    <p style="color: #a8c5ff; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;"><strong>Avg Trade Duration:</strong> Minimum ${firmRules.average_trade_duration.minimum_duration}</p>
+                    <p style="color: #d4e3f7; font-size: 0.85rem; margin: 0;">• At least 50% of profit must come from trades exceeding 2 minutes</p>
+                  </div>
+                  <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 5px; margin-bottom: 0.75rem;">
+                    <p style="color: #d5a8a8; font-size: 0.9rem; font-weight: 600; margin: 0;"><strong>Order Block Spamming:</strong> ${firmRules.order_block_spamming.description}</p>
+                  </div>
+                  <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 5px; margin-bottom: 0.75rem;">
+                    <p style="color: #d4e3f7; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;"><strong>Risk Management:</strong> ${firmRules.risk_management.rule}</p>
+                  </div>
+                </div>
+                
+                <!-- Maximum Lot Sizes -->
+                <div style="margin-bottom: 1.5rem;">
+                  <h6 style="color: #a8c5ff; font-weight: 700; margin-bottom: 1rem;">Maximum Lot Sizes</h6>
+                  <div class="row">
+                    <div class="col-12 col-lg-6 mb-3">
+                      <div style="background: rgba(168,197,255,0.1); padding: 1rem; border-radius: 5px; border-left: 3px solid #a8c5ff;">
+                        <p style="color: #a8c5ff; font-weight: 600; margin-bottom: 0.75rem;">Alpha Swing Funded</p>
+      `;
+      
+      maxLotSizes.alpha_swing.forEach(item => {
+        html += `<p style="color: #d4e3f7; font-size: 0.85rem; margin-bottom: 0.3rem;"><strong>${item.account_size}:</strong> ${item.max_lots} lots</p>`;
+      });
+      
+      html += `
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-6 mb-3">
+                      <div style="background: rgba(168,213,168,0.1); padding: 1rem; border-radius: 5px; border-left: 3px solid #a8d5a8;">
+                        <p style="color: #a8d5a8; font-weight: 600; margin-bottom: 0.75rem;">Alpha One/Pro/Three Funded</p>
+      `;
+      
+      maxLotSizes.alpha_one_pro_6_8_10_three.forEach(item => {
+        html += `<p style="color: #d4e3f7; font-size: 0.85rem; margin-bottom: 0.3rem;"><strong>${item.account_size}:</strong> ${item.max_lots} lots</p>`;
+      });
+      
+      html += `
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Payout Policy -->
+                <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 5px; margin-bottom: 1.5rem;">
+                  <h6 style="color: #a8c5ff; font-weight: 700; margin-bottom: 1rem;">Payout Policy</h6>
+                  <p style="color: #d4e3f7; margin-bottom: 0.75rem;"><strong style="color: #a8c5ff;">Biweekly Payout:</strong> ${payoutPolicy.available_options.biweekly_payout.join(', ')}</p>
+                  <p style="color: #d4e3f7; margin-bottom: 0.75rem;"><strong style="color: #a8c5ff;">2% On Demand:</strong> ${payoutPolicy.available_options.two_percent_on_demand.join(', ')}</p>
+                  <p style="color: #d4e3f7; margin-bottom: 0.75rem;"><strong style="color: #a8c5ff;">Best Day Rule:</strong> ${payoutPolicy.two_percent_on_demand_details.best_day_rule}</p>
+                  <p style="color: #d4e3f7; margin: 0;"><strong style="color: #a8c5ff;">Minimum Withdrawal:</strong> ${payoutPolicy.biweekly_payout_details.minimum_withdrawal}</p>
+                </div>
+                
+                <!-- Account Types Summary -->
+                <h6 style="color: #a8c5ff; font-weight: 700; margin-bottom: 1rem;">Account Types Summary</h6>
+                <div class="row">
+      `;
+      
+      Object.entries(accountTypes).forEach(([key, value]) => {
+        const displayName = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        html += `
+          <div class="col-12 col-md-6 col-lg-4 mb-3">
+            <div style="background: rgba(168,197,255,0.1); padding: 0.75rem; border-radius: 5px; border-left: 3px solid #a8c5ff;">
+              <p style="color: #a8c5ff; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.5rem;">${displayName}</p>
+              <p style="color: #d4e3f7; font-size: 0.8rem; margin: 0;">
+        `;
+        
+        if (typeof value === 'object') {
+          Object.entries(value).forEach(([k, v]) => {
+            const label = k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            const val = Array.isArray(v) ? v.join(', ') : v;
+            html += `<strong>${label}:</strong> ${val}<br>`;
+          });
+        }
+        html += `
+              </p>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += `
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      mainContent.innerHTML = html;
+      
+      // Add CSS for animation
+      const style = document.createElement('style');
+      style.innerHTML = `
+        .firm-card-header {
+          transition: background 0.3s ease;
+        }
+        .firm-card-header:hover {
+          background: linear-gradient(135deg, #2a4a7a 0%, #1a3a7a 100%) !important;
+        }
+        .firm-card-header i {
+          transition: transform 0.3s ease;
+        }
+        .firm-card-header.expanded i {
+          transform: rotate(180deg);
+        }
+        .firm-card-content table {
+          font-size: 0.9rem;
+        }
+      `;
+      document.head.appendChild(style);
+      
+    } catch (error) {
+      mainContent.innerHTML = '<p class="text-danger">Error loading Propfirms Overview. Please check if acc.en.json exists.</p>';
+      console.error('Error loading propfirms overview:', error);
+    }
+  }
+
+  // Toggle firm card expansion
+  function toggleFirmCard(headerElement) {
+    const contentElement = headerElement.nextElementSibling;
+    const isExpanded = headerElement.classList.contains('expanded');
+    
+    if (isExpanded) {
+      // Collapse
+      contentElement.style.maxHeight = '0';
+      headerElement.classList.remove('expanded');
+    } else {
+      // Expand
+      contentElement.style.maxHeight = contentElement.scrollHeight + 'px';
+      headerElement.classList.add('expanded');
+    }
   }
 
   // Load lexicon from JSON
